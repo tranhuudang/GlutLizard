@@ -4,7 +4,9 @@
  */
 package com.zeroboy.glutlizard;
 
+import java.awt.Graphics;
 import java.awt.Image;
+import java.awt.image.BufferedImage;
 import javax.swing.ImageIcon;
 
 /**
@@ -12,17 +14,16 @@ import javax.swing.ImageIcon;
  * @author zero
  */
 public class Fly {
-    private int x,y;
-    private Image fly;
-    public Fly(){
-        
+    private int x;
+    private int y;
+    private BufferedImage image;
+
+    public Fly(int x, int y, BufferedImage image) {
+        this.x = x;
+        this.y = y;
+        this.image = image;
     }
-    
-    private void loadImage(){
-        var image = new ImageIcon("src/resources/fly-50.png");
-        fly = image.getImage();
-    }
-    
+
     public int getX(){
         return x;
     }
@@ -35,10 +36,13 @@ public class Fly {
     public void setY(int y){
         this.y = y;
     }
-    public Image getFly(){
-        return fly;
+    
+    public void setPosition(int x, int y) {
+        this.x = x;
+        this.y = y;
     }
-    public void setFly(Image fly){
-        this.fly = fly;
+    
+    public void draw(Graphics g) {
+        g.drawImage(image, x, y, null);
     }
 }
