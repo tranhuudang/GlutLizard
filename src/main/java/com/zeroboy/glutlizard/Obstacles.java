@@ -1,27 +1,22 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
+
 package com.zeroboy.glutlizard;
+
+
 
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
 import javax.swing.ImageIcon;
 
-/**
- *
- * @author zero
- */
-public class Fly {
+public class Obstacles {
     private int x;
     private int y;
-    private BufferedImage image;
+    private BufferedImage[] images;
 
-    public Fly(int x, int y, BufferedImage image) {
+    public Obstacles(int x, int y, BufferedImage[] images) {
         this.x = x;
         this.y = y;
-        this.image = image;
+        this.images = images;
     }
 
     public int getX(){
@@ -43,6 +38,7 @@ public class Fly {
     }
     
     public void draw(Graphics g) {
+        for (BufferedImage image : images)
         g.drawImage(image, x, y, null);
     }
     
