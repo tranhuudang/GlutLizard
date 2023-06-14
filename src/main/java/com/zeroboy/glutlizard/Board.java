@@ -55,6 +55,10 @@ class BoardPanel extends JPanel implements KeyListener {
     private boolean leftKeyPressed = false;
     private boolean downKeyPressed = false;
     private boolean rightKeyPressed = false;
+    private boolean spaceKeyPressed = false;
+
+    private int tongueLength = 100;
+    private int tongueWidth = 8;
 
     public BoardPanel() {
         // Load the lizard and fly images from the assets
@@ -127,6 +131,44 @@ class BoardPanel extends JPanel implements KeyListener {
         for (Fly fly : flies) {
             fly.draw(g2d);
         }
+
+        // Draw the tongue if Space key is pressed
+        if (spaceKeyPressed) {
+            // Get the current angle of the lizard
+            double angle = 70 - lizard.getRotationAngle();
+
+            // Calculate the center point of the lizard image
+            int centerX = lizard.getX() + 100 / 2;
+            int centerY = lizard.getY() + 100 / 2;
+
+            // Calculate the offset from the center to the starting point of the tongue line
+            int offset = 70; // Distance from the center to the starting point
+
+            // Calculate the starting point of the tongue line
+            int startX = centerX + (int) (offset * Math.cos(angle));
+            int startY = centerY - (int) (offset * Math.sin(angle));
+
+            // Calculate the end point of the tongue line based on the desired angle
+            int endX = startX + (int) (tongueLength * Math.cos(angle));
+            int endY = startY - (int) (tongueLength * Math.sin(angle));
+
+            // #LIZARD TONGUE COLOR
+            // Define the gradient colors for the tongue
+            Color startColor = new Color(255, 150, 150); // Lighter color
+            Color endColor = new Color(255, 50, 50); // Darker color
+
+            // Create a gradient paint object using the start and end colors
+            Paint gradientPaint = new GradientPaint(startX, startY, startColor, endX, endY, endColor);
+
+            // Set the paint and stroke for the tongue line
+            g2d.setPaint(gradientPaint);
+            // Round edge for lizard tongue
+            g2d.setStroke(new BasicStroke(tongueWidth, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
+            // #END
+
+            // Draw the tongue line
+            g2d.drawLine(startX, startY, endX, endY);
+        }
     }
 
     @Override
@@ -146,16 +188,18 @@ class BoardPanel extends JPanel implements KeyListener {
         } else if (keyCode == KeyEvent.VK_DOWN) {
             downKeyPressed = true;
             lizard.moveDown();
+        } else if (keyCode == KeyEvent.VK_SPACE) {
+            spaceKeyPressed = true;
         }
 
         if (upKeyPressed && leftKeyPressed) {
             // Rotate the lizard counter-clockwise
             lizard.rotateCounterClockwise();
-        } else if (upKeyPressed && rightKeyPressed){
+        } else if (upKeyPressed && rightKeyPressed) {
             lizard.rotateClockwise();
-        }else if (downKeyPressed && leftKeyPressed){
+        } else if (downKeyPressed && leftKeyPressed) {
             lizard.rotateClockwise();
-        }else if (downKeyPressed && rightKeyPressed){
+        } else if (downKeyPressed && rightKeyPressed) {
             lizard.rotateCounterClockwise();
         }
         // Repaint the board to show the updated lizard position
@@ -176,6 +220,8 @@ class BoardPanel extends JPanel implements KeyListener {
             leftKeyPressed = false;
         } else if (keyCode == KeyEvent.VK_RIGHT) {
             rightKeyPressed = false;
+        } else if (keyCode == KeyEvent.VK_SPACE) {
+            spaceKeyPressed = false;
         }
     }
 

@@ -10,11 +10,13 @@ import java.awt.Image;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import javax.swing.ImageIcon;
+
 /**
  *
  * @author zero
  */
 public class Lizard {
+
     private int x;
     private int y;
     private int CELL_SIZE = 10;
@@ -28,20 +30,23 @@ public class Lizard {
         this.rotationAngle = 0.0;
     }
 
-    public int getX(){
+    public int getX() {
         return x;
     }
-    public void setX(int x){
+
+    public void setX(int x) {
         this.x = x;
     }
-    public int getY(){
+
+    public int getY() {
         return y;
     }
-    public void setY(int y){
+
+    public void setY(int y) {
         this.y = y;
     }
-    
-        public void moveLeft() {
+
+    public void moveLeft() {
         x -= CELL_SIZE;
     }
 
@@ -56,20 +61,20 @@ public class Lizard {
     public void moveDown() {
         y += CELL_SIZE;
     }
-    
+
     public void setPosition(int x, int y) {
         this.x = x;
         this.y = y;
     }
-    
+
     public void rotateClockwise() {
         rotationAngle += Math.toRadians(20);
     }
 
-    public void rotateCounterClockwise(){
+    public void rotateCounterClockwise() {
         rotationAngle -= Math.toRadians(20);
     }
-    
+
     public void draw(Graphics2D g) {
         AffineTransform oldTransform = g.getTransform();
         AffineTransform newTransform = (AffineTransform) oldTransform.clone();
@@ -80,5 +85,17 @@ public class Lizard {
         g.drawImage(image, x, y, null);
 
         g.setTransform(oldTransform);
+    }
+
+    double getRotationAngle() {
+        return rotationAngle; // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    double getTongueAngle() {
+        return rotationAngle + Math.toRadians(-45); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    Object getImage() {
+        return image; // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 }
