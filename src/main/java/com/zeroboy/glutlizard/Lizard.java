@@ -7,18 +7,12 @@ package com.zeroboy.glutlizard;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.GradientPaint;
-import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.Image;
 import java.awt.Paint;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
-import javax.swing.ImageIcon;
 
-/**
- *
- * @author zero
- */
+
 public class Lizard {
 
     private int x;

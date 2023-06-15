@@ -2,9 +2,7 @@
 package com.zeroboy.glutlizard;
 
 import java.awt.Graphics;
-import java.awt.Image;
 import java.awt.image.BufferedImage;
-import javax.swing.ImageIcon;
 
 /**
  *

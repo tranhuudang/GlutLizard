@@ -12,32 +12,6 @@ import javax.imageio.ImageIO;
 import java.util.List;
 import java.util.ArrayList;
 
-public class Board extends JFrame {
-
-    public Board() {
-        setSize(Properties.BOARD_WIDTH, Properties.BOARD_HEIGHT);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-        BoardPanel boardPanel = new BoardPanel();
-        add(boardPanel);
-
-        // Add the key listener to the board panel
-        boardPanel.addKeyListener(boardPanel);
-
-        // Set the board panel as the focusable component
-        boardPanel.setFocusable(true);
-
-        // Request focus for the board panel
-        boardPanel.requestFocusInWindow();
-
-        setVisible(true);
-    }
-
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(Board::new);
-    }
-}
-
 class BoardPanel extends JPanel implements KeyListener {
 
     private Lizard lizard;
@@ -221,11 +195,16 @@ class BoardPanel extends JPanel implements KeyListener {
 
         // Reset the key states when the corresponding arrow keys are released
         switch (keyCode) {
-            case KeyEvent.VK_UP -> upKeyPressed = false;
-            case KeyEvent.VK_DOWN -> downKeyPressed = false;
-            case KeyEvent.VK_LEFT -> leftKeyPressed = false;
-            case KeyEvent.VK_RIGHT -> rightKeyPressed = false;
-            case KeyEvent.VK_SPACE -> spaceKeyPressed = false;
+            case KeyEvent.VK_UP ->
+                upKeyPressed = false;
+            case KeyEvent.VK_DOWN ->
+                downKeyPressed = false;
+            case KeyEvent.VK_LEFT ->
+                leftKeyPressed = false;
+            case KeyEvent.VK_RIGHT ->
+                rightKeyPressed = false;
+            case KeyEvent.VK_SPACE ->
+                spaceKeyPressed = false;
             default -> {
             }
         }

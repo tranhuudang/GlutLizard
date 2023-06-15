@@ -1,11 +1,8 @@
 package com.zeroboy.glutlizard;
 
 import java.awt.Graphics;
-import java.awt.Image;
 import java.awt.image.BufferedImage;
-import java.util.List;
 import java.util.Random;
-import javax.swing.ImageIcon;
 
 public class Obstacle {
 

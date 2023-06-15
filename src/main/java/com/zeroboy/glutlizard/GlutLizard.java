@@ -1,7 +1,4 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
+
 package com.zeroboy.glutlizard;
 
 import java.awt.EventQueue;
@@ -14,15 +11,26 @@ public class GlutLizard extends JFrame {
     }
 
     private void initUI() {
-        add(new Board());
+        setSize(Properties.BOARD_WIDTH, Properties.BOARD_HEIGHT);
+        BoardPanel boardPanel = new BoardPanel();
+        add(boardPanel);
+        // Add the key listener to the board panel
+        boardPanel.addKeyListener(boardPanel);
+
+        // Set the board panel as the focusable component
+        boardPanel.setFocusable(true);
+
+        // Request focus for the board panel
+        boardPanel.requestFocusInWindow();
+
+        setVisible(true);
+
         setResizable(false);
-        pack();
+
         setTitle("GlutLizard");
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
-    
- 
 
     public static void main(String[] args) {
         EventQueue.invokeLater(() -> {
