@@ -23,11 +23,10 @@ public class Lizard {
 
     private int x;
     private int y;
-    private int CELL_SIZE = 10;
-    private BufferedImage image;
+    private final BufferedImage image;
     private double rotationAngle;
-    private int tongueLength = 100;
-    private int tongueWidth = 8;
+    private final int tongueLength = 100;
+    private final int tongueWidth = 8;
 
     public Lizard(int x, int y, BufferedImage image) {
         this.x = x;
@@ -53,19 +52,19 @@ public class Lizard {
     }
 
     public void moveLeft() {
-        x -= CELL_SIZE;
+        x -= Properties.CELL_SIZE;
     }
 
     public void moveRight() {
-        x += CELL_SIZE;
+        x += Properties.CELL_SIZE;
     }
 
     public void moveUp() {
-        y -= CELL_SIZE;
+        y -= Properties.CELL_SIZE;
     }
 
     public void moveDown() {
-        y += CELL_SIZE;
+        y += Properties.CELL_SIZE;
     }
 
     public void setPosition(int x, int y) {
@@ -97,9 +96,6 @@ public class Lizard {
         return rotationAngle; 
     }
 
-    Object getImage() {
-        return image;
-    }
     
     // Draw the tongue if Space key is pressed
     public void drawLizardTongue(Graphics2D g2d){

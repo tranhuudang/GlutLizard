@@ -1,46 +1,52 @@
-
 package com.zeroboy.glutlizard;
 
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
+import java.util.List;
+import java.util.Random;
 import javax.swing.ImageIcon;
 
-/**
- *
- * @author zero
- */
-public class Fly {
+public class Obstacle {
+
     private int x;
     private int y;
     private final BufferedImage image;
+    private final Random random;
 
-    public Fly(int x, int y, BufferedImage image) {
-        this.x = x;
-        this.y = y;
+    public Obstacle(BufferedImage image) {
         this.image = image;
+        random = new Random();
+        generateRandomPosition();
     }
 
-    public int getX(){
+    private void generateRandomPosition() {
+        x = random.nextInt(Properties.BOARD_WIDTH);
+        y = random.nextInt(Properties.BOARD_HEIGHT);
+    }
+
+    public int getX() {
         return x;
     }
-    public void setX(int x){
+
+    public void setX(int x) {
         this.x = x;
     }
-    public int getY(){
+
+    public int getY() {
         return y;
     }
-    public void setY(int y){
+
+    public void setY(int y) {
         this.y = y;
     }
-    
+
     public void setPosition(int x, int y) {
         this.x = x;
         this.y = y;
     }
-    
+
     public void draw(Graphics g) {
         g.drawImage(image, x, y, null);
     }
-    
 }
