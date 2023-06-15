@@ -1,5 +1,5 @@
 
-package com.zeroboy.glutlizard;
+package com.zeroboy.glutlizard.Models;
 
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;

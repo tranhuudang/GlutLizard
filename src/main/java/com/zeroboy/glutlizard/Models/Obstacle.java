@@ -1,5 +1,6 @@
-package com.zeroboy.glutlizard;
+package com.zeroboy.glutlizard.Models;
 
+import com.zeroboy.glutlizard.Properties;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.util.Random;

@@ -1,5 +1,8 @@
 package com.zeroboy.glutlizard;
 
+import com.zeroboy.glutlizard.Models.Obstacle;
+import com.zeroboy.glutlizard.Models.Lizard;
+import com.zeroboy.glutlizard.Models.Fly;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;

@@ -2,8 +2,9 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package com.zeroboy.glutlizard;
+package com.zeroboy.glutlizard.Models;
 
+import com.zeroboy.glutlizard.Properties;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.GradientPaint;
@@ -86,7 +87,7 @@ public class Lizard {
         g.setTransform(oldTransform);
     }
 
-    double getRotationAngle() {
+    public double getRotationAngle() {
         return rotationAngle; 
     }
 
