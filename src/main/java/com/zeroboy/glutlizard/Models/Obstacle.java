@@ -2,6 +2,7 @@ package com.zeroboy.glutlizard.Models;
 
 import com.zeroboy.glutlizard.Properties;
 import java.awt.Graphics;
+import java.awt.Point;
 import java.awt.image.BufferedImage;
 import java.util.Random;
 
@@ -46,5 +47,10 @@ public class Obstacle {
 
     public void draw(Graphics g) {
         g.drawImage(image, x, y, null);
+    }
+    // Check if a point is inside obstacle's boundary
+    public boolean isPointIntersectingObstacle(Point point) {
+        return point.x >= x && point.x < x + image.getWidth()
+                && point.y >= y && point.y < y + image.getHeight();
     }
 }

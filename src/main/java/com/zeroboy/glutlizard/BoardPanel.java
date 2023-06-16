@@ -14,6 +14,9 @@ import java.util.Random;
 import javax.imageio.ImageIO;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 class BoardPanel extends JPanel implements KeyListener {
 
@@ -46,13 +49,23 @@ class BoardPanel extends JPanel implements KeyListener {
             listObstaclesImage.add(ImageIO.read(new File("src/resources/bushFlower-100.png")));
             listObstaclesImage.add(ImageIO.read(new File("src/resources/bushFlower-100.png")));
             listObstaclesImage.add(ImageIO.read(new File("src/resources/bushFlower-100.png")));
-            listObstaclesImage.add(ImageIO.read(new File("src/resources/bushFlower-100.png")));
             listObstaclesImage.add(ImageIO.read(new File("src/resources/tinyBush-100.png")));
             listObstaclesImage.add(ImageIO.read(new File("src/resources/greenBush-100.png")));
             listObstaclesImage.add(ImageIO.read(new File("src/resources/tinyBush-100.png")));
-            listObstaclesImage.add(ImageIO.read(new File("src/resources/greenBush-100.png")));
             listObstaclesImage.add(ImageIO.read(new File("src/resources/tinyBush-100.png")));
             listObstaclesImage.add(ImageIO.read(new File("src/resources/greenBush-100.png")));
+            listObstaclesImage.add(ImageIO.read(new File("src/resources/greenBush-100.png")));
+            listObstaclesImage.add(ImageIO.read(new File("src/resources/flower-80.png")));
+            listObstaclesImage.add(ImageIO.read(new File("src/resources/flower-80.png")));
+            listObstaclesImage.add(ImageIO.read(new File("src/resources/flower-80.png")));
+            listObstaclesImage.add(ImageIO.read(new File("src/resources/flower-50.png")));
+            listObstaclesImage.add(ImageIO.read(new File("src/resources/flower-50.png")));
+            listObstaclesImage.add(ImageIO.read(new File("src/resources/flower-50.png")));
+            listObstaclesImage.add(ImageIO.read(new File("src/resources/flower-50.png")));
+            listObstaclesImage.add(ImageIO.read(new File("src/resources/flower-50.png")));
+            listObstaclesImage.add(ImageIO.read(new File("src/resources/flower-80-yellow.png")));
+            listObstaclesImage.add(ImageIO.read(new File("src/resources/flower-50-yellow.png")));
+            listObstaclesImage.add(ImageIO.read(new File("src/resources/flower-50-yellow.png")));
             for (BufferedImage obstacleImage : listObstaclesImage) {
                 obstacles.add(new Obstacle(obstacleImage));
             }
@@ -95,10 +108,8 @@ class BoardPanel extends JPanel implements KeyListener {
             for (int y = 0; y < Properties.NUM_CELLS; y++) {
                 int cellX = x * Properties.CELL_SIZE;
                 int cellY = y * Properties.CELL_SIZE;
-                g.setColor(new Color(105, 88, 88));
+                g.setColor(Properties.BACKGROUND_COLOR);
                 g.fillRect(cellX, cellY, Properties.CELL_SIZE, Properties.CELL_SIZE);
-//                g.setColor(Color.LIGHT_GRAY);
-//                g.drawRect(cellX, cellY, CELL_SIZE, CELL_SIZE);
             }
         }
         // Draw obstacles
@@ -114,6 +125,16 @@ class BoardPanel extends JPanel implements KeyListener {
         // Draw the tongue if Space key is pressed
         if (spaceKeyPressed) {
             lizard.drawLizardTongue(g2d);
+            for (Fly fly : flies) {
+                if (fly.isPointIntersectingFly(lizard.getEndTonguePosition())) {
+                    flies.remove(fly);
+                }
+            }
+            for (Obstacle obstacle : obstacles) {
+                if (obstacle.isPointIntersectingObstacle(lizard.getEndTonguePosition())) {
+                    lizard.hitObstacle();
+                }
+            }
         }
     }
 
@@ -168,8 +189,7 @@ class BoardPanel extends JPanel implements KeyListener {
             default -> {
             }
         }
-        System.out.println("here");
-        System.out.println(currentLizardAngle);
+        // Handle 2 key pressed at the same time
         if (upKeyPressed && leftKeyPressed) {
             lizard.moveUp();
             lizard.moveLeft();
