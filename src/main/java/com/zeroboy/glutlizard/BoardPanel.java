@@ -14,12 +14,10 @@ import java.util.Random;
 import javax.imageio.ImageIO;
 import java.util.List;
 import java.util.ArrayList;
-import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 class BoardPanel extends JPanel implements KeyListener {
 
+    private ScoreBoard scoreBoard;
     private Lizard lizard;
     private List<Fly> flies;
     private Random random;
@@ -40,6 +38,7 @@ class BoardPanel extends JPanel implements KeyListener {
             BufferedImage flyImage = ImageIO.read(new File("src/resources/fly-50.png"));
             lizard = new Lizard(100, 200, lizardImage);
             flies = new ArrayList<>();
+            scoreBoard = new ScoreBoard();
             obstacles = new ArrayList<>();
             listObstaclesImage = new ArrayList<>();
             random = new Random();
@@ -122,12 +121,16 @@ class BoardPanel extends JPanel implements KeyListener {
         for (Fly fly : flies) {
             fly.draw(g2d);
         }
+        
+        
+        
         // Draw the tongue if Space key is pressed
         if (spaceKeyPressed) {
             lizard.drawLizardTongue(g2d);
             for (Fly fly : flies) {
                 if (fly.isPointIntersectingFly(lizard.getEndTonguePosition())) {
                     flies.remove(fly);
+                    Properties.SCORE = Properties.SCORE + 1;
                 }
             }
             for (Obstacle obstacle : obstacles) {
@@ -136,6 +139,8 @@ class BoardPanel extends JPanel implements KeyListener {
                 }
             }
         }
+        // Draw the top score board
+        scoreBoard.draw(g2d);
     }
 
     @Override

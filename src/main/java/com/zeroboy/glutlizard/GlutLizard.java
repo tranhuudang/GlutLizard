@@ -7,6 +7,7 @@ public class GlutLizard extends JFrame {
 
     public GlutLizard() {
         initUI();
+        
     }
 
     private void initUI() {
@@ -24,6 +25,7 @@ public class GlutLizard extends JFrame {
         setTitle("GlutLizard");
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        
     }
 
     public static void main(String[] args) {

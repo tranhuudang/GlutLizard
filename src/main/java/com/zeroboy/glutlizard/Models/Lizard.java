@@ -67,8 +67,7 @@ public class Lizard {
     }
 
     private void moving() {
-        Timer delay = new Timer(200, e ->{
-            steps = steps + 1;
+        steps = steps + 1;
         try {
             if (steps % 2 == 0) {
                 this.image = ImageIO.read(new File("src/resources/lizard-100-1.png"));
@@ -78,9 +77,6 @@ public class Lizard {
         } catch (IOException ex) {
             Logger.getLogger(Lizard.class.getName()).log(Level.SEVERE, null, ex);
         }
-        });
-        delay.setRepeats(false);
-        delay.start();
     }
 
     public void moveLeft() {
