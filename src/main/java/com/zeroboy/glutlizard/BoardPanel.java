@@ -1,10 +1,12 @@
 package com.zeroboy.glutlizard;
 
-import com.zeroboy.glutlizard.Models.Obstacle;
-import com.zeroboy.glutlizard.Models.Lizard;
-import com.zeroboy.glutlizard.Models.Fly;
+import com.zeroboy.glutlizard.Components.Obstacle;
+import com.zeroboy.glutlizard.Components.Lizard;
+import com.zeroboy.glutlizard.Components.Fly;
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.image.BufferedImage;
@@ -23,6 +25,8 @@ class BoardPanel extends JPanel implements KeyListener {
     private Random random;
     private List<Obstacle> obstacles;
     private List<BufferedImage> listObstaclesImage;
+    private Timer spaceLimitTimer;
+    private boolean allowSpaceKey;
 
     // Arrow control key
     private boolean upKeyPressed = false;
@@ -75,6 +79,12 @@ class BoardPanel extends JPanel implements KeyListener {
             // Start a timer to update the flies' positions at regular intervals
             Timer timer = new Timer(50, e -> moveFlies());
             timer.start();
+            // Space press limiter
+            spaceLimitTimer = new Timer(500, e -> {
+                allowSpaceKey = true;
+            });
+            spaceLimitTimer.setRepeats(false); // Only fire once
+            spaceLimitTimer.start();
         } catch (IOException e) {
         }
     }
@@ -121,9 +131,6 @@ class BoardPanel extends JPanel implements KeyListener {
         for (Fly fly : flies) {
             fly.draw(g2d);
         }
-        
-        
-        
         // Draw the tongue if Space key is pressed
         if (spaceKeyPressed) {
             lizard.drawLizardTongue(g2d);
@@ -133,14 +140,22 @@ class BoardPanel extends JPanel implements KeyListener {
                     Properties.SCORE = Properties.SCORE + 1;
                 }
             }
+            boolean touchedObstacle = false; // Some time tongue touch many obstacles, we want one hit will touch 1 obstacle.
             for (Obstacle obstacle : obstacles) {
                 if (obstacle.isPointIntersectingObstacle(lizard.getEndTonguePosition())) {
                     lizard.hitObstacle();
+                    touchedObstacle = true;
                 }
             }
+            if (touchedObstacle) {
+                scoreBoard.removeHeart();
+            }
+        }
+        if (Properties.HEART_VALUE <= 0) {
+            scoreBoard.gameOver(g2d);
         }
         // Draw the top score board
-        scoreBoard.draw(g2d);
+        scoreBoard.drawTopBoard(g2d);
     }
 
     @Override
@@ -189,8 +204,13 @@ class BoardPanel extends JPanel implements KeyListener {
                     lizard.moveDown();
                 }
             }
-            case KeyEvent.VK_SPACE ->
-                spaceKeyPressed = true;
+            case KeyEvent.VK_SPACE -> {
+                if (allowSpaceKey) {
+                    spaceKeyPressed = true;
+                    spaceLimitTimer.restart();
+                    allowSpaceKey = false;
+                }
+            }
             default -> {
             }
         }

@@ -1,4 +1,4 @@
-package com.zeroboy.glutlizard.Models;
+package com.zeroboy.glutlizard.Components;
 
 import com.zeroboy.glutlizard.Properties;
 import java.awt.BasicStroke;
