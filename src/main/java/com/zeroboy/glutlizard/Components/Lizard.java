@@ -156,7 +156,7 @@ public class Lizard {
         g2d.drawLine(startX, startY, endTongueX, endTongueY);
     }
 
-    public void hitObstacle() {
+    public void surprise() {
         try {
             this.image = ImageIO.read(new File("src/resources/lizard-100-hitObstacle.png"));
             Timer stopTimer = new Timer(500, e -> {

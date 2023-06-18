@@ -3,6 +3,12 @@ package com.zeroboy.glutlizard;
 import com.zeroboy.glutlizard.Components.Obstacle;
 import com.zeroboy.glutlizard.Components.Lizard;
 import com.zeroboy.glutlizard.Components.Fly;
+import static com.zeroboy.glutlizard.Properties.BACKGROUND_COLOR;
+import static com.zeroboy.glutlizard.Properties.CELL_SIZE;
+import static com.zeroboy.glutlizard.Properties.FLY_IMAGE;
+import static com.zeroboy.glutlizard.Properties.LIST_OBSTACLE_IMAGES;
+import static com.zeroboy.glutlizard.Properties.LIZARD_IMAGE;
+import static com.zeroboy.glutlizard.Properties.NUM_CELLS;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -16,17 +22,21 @@ import java.util.Random;
 import javax.imageio.ImageIO;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 class BoardPanel extends JPanel implements KeyListener {
 
-    private ScoreBoard scoreBoard;
-    private Lizard lizard;
-    private List<Fly> flies;
-    private Random random;
-    private List<Obstacle> obstacles;
-    private List<BufferedImage> listObstaclesImage;
-    private Timer spaceLimitTimer;
+    private final ScoreBoard scoreBoard;
+    private final Lizard lizard;
+    private final List<Fly> flies;
+    private final Random random;
+    private final List<Obstacle> obstacles;
+
+    private final Timer spaceLimitTimer;
     private boolean allowSpaceKey;
+    private JButton restartButton;
+    private final Properties properties;
 
     // Arrow control key
     private boolean upKeyPressed = false;
@@ -36,57 +46,72 @@ class BoardPanel extends JPanel implements KeyListener {
     private boolean spaceKeyPressed = false;
 
     public BoardPanel() {
+        createRestartButton();
+        properties = new Properties();
         // Load the lizard and fly images from the assets
-        try {
-            BufferedImage lizardImage = ImageIO.read(new File("src/resources/lizard-100.png"));
-            BufferedImage flyImage = ImageIO.read(new File("src/resources/fly-50.png"));
-            lizard = new Lizard(100, 200, lizardImage);
-            flies = new ArrayList<>();
-            scoreBoard = new ScoreBoard();
-            obstacles = new ArrayList<>();
-            listObstaclesImage = new ArrayList<>();
-            random = new Random();
-            // Create obstacles' image
-            listObstaclesImage.add(ImageIO.read(new File("src/resources/stone-100.png")));
-            listObstaclesImage.add(ImageIO.read(new File("src/resources/bush-100.png")));
-            listObstaclesImage.add(ImageIO.read(new File("src/resources/bushFlower-100.png")));
-            listObstaclesImage.add(ImageIO.read(new File("src/resources/bushFlower-100.png")));
-            listObstaclesImage.add(ImageIO.read(new File("src/resources/bushFlower-100.png")));
-            listObstaclesImage.add(ImageIO.read(new File("src/resources/tinyBush-100.png")));
-            listObstaclesImage.add(ImageIO.read(new File("src/resources/greenBush-100.png")));
-            listObstaclesImage.add(ImageIO.read(new File("src/resources/tinyBush-100.png")));
-            listObstaclesImage.add(ImageIO.read(new File("src/resources/tinyBush-100.png")));
-            listObstaclesImage.add(ImageIO.read(new File("src/resources/greenBush-100.png")));
-            listObstaclesImage.add(ImageIO.read(new File("src/resources/greenBush-100.png")));
-            listObstaclesImage.add(ImageIO.read(new File("src/resources/flower-80.png")));
-            listObstaclesImage.add(ImageIO.read(new File("src/resources/flower-80.png")));
-            listObstaclesImage.add(ImageIO.read(new File("src/resources/flower-80.png")));
-            listObstaclesImage.add(ImageIO.read(new File("src/resources/flower-50.png")));
-            listObstaclesImage.add(ImageIO.read(new File("src/resources/flower-50.png")));
-            listObstaclesImage.add(ImageIO.read(new File("src/resources/flower-50.png")));
-            listObstaclesImage.add(ImageIO.read(new File("src/resources/flower-50.png")));
-            listObstaclesImage.add(ImageIO.read(new File("src/resources/flower-50.png")));
-            listObstaclesImage.add(ImageIO.read(new File("src/resources/flower-80-yellow.png")));
-            listObstaclesImage.add(ImageIO.read(new File("src/resources/flower-50-yellow.png")));
-            listObstaclesImage.add(ImageIO.read(new File("src/resources/flower-50-yellow.png")));
-            for (BufferedImage obstacleImage : listObstaclesImage) {
-                obstacles.add(new Obstacle(obstacleImage));
-            }
-            // Create three flies at random positions
-            for (int i = 0; i < 15; i++) {
-                flies.add(new Fly(400, 300, flyImage));
-            }
-            // Start a timer to update the flies' positions at regular intervals
-            Timer timer = new Timer(50, e -> moveFlies());
-            timer.start();
-            // Space press limiter
-            spaceLimitTimer = new Timer(500, e -> {
-                allowSpaceKey = true;
-            });
-            spaceLimitTimer.setRepeats(false); // Only fire once
-            spaceLimitTimer.start();
-        } catch (IOException e) {
+        lizard = new Lizard(100, 200, LIZARD_IMAGE);
+        flies = new ArrayList<>();
+        scoreBoard = new ScoreBoard();
+        scoreBoard.resetScore();
+        obstacles = new ArrayList<>();
+        random = new Random();
+        // Create obstacles
+        for (BufferedImage obstacleImage : LIST_OBSTACLE_IMAGES) {
+            obstacles.add(new Obstacle(obstacleImage));
         }
+        // Create three flies at random positions
+        for (int i = 0; i < 15; i++) {
+            flies.add(new Fly(400, 300, FLY_IMAGE));
+        }
+        // Start a timer to update the flies' positions at regular intervals
+        Timer timer = new Timer(50, e -> moveFlies());
+        timer.start();
+        // Space press limiter
+        spaceLimitTimer = new Timer(500, e -> {
+            allowSpaceKey = true;
+        });
+        spaceLimitTimer.setRepeats(false); // Only fire once
+        spaceLimitTimer.start();
+    }
+
+    private void createRestartButton() {
+        restartButton = new JButton("Restart");
+        restartButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                restartGame();
+            }
+        });
+        restartButton.setBounds(10, 10, 80, 30); // Set the button's position and size
+        restartButton.setVisible(false); // Hide the button initially
+        add(restartButton); // Add the button to the panel
+    }
+
+    private void restartGame() {
+        System.out.println("hello over");
+        // Reset game state
+        resetBoard();
+        // Hide the restart button
+        restartButton.setVisible(false);
+        // Request focus for keyboard input
+        requestFocus();
+        // Repaint the board
+        repaint();
+    }
+
+    private void resetBoard() {
+        // Reset lizard position
+        lizard.setPosition(100, 200);
+        // Reset flies
+        flies.clear();
+        for (int i = 0; i < 15; i++) {
+            flies.add(new Fly(400, 300, FLY_IMAGE));
+        }
+        // Reset score
+        scoreBoard.resetScore();
+        // Reset any other necessary variables or states
+        // Repaint the board
+        repaint();
     }
 
     private void moveFlies() {
@@ -96,10 +121,10 @@ class BoardPanel extends JPanel implements KeyListener {
             int deltaX = random.nextInt(3) - 1; // Random value between -1 and 1
             int deltaY = random.nextInt(3) - 1; // Random value between -1 and 1
             // Calculate the new potential position for the fly
-            int newX = fly.getX() + deltaX * Properties.CELL_SIZE;
-            int newY = fly.getY() + deltaY * Properties.CELL_SIZE;
+            int newX = fly.getX() + deltaX * CELL_SIZE;
+            int newY = fly.getY() + deltaY * CELL_SIZE;
             // Check if the potential position is within the board boundaries
-            if (newX >= 0 && newX < Properties.NUM_CELLS * Properties.CELL_SIZE && newY >= 0 && newY < Properties.NUM_CELLS * Properties.CELL_SIZE) {
+            if (newX >= 0 && newX < NUM_CELLS * CELL_SIZE && newY >= 0 && newY < NUM_CELLS * CELL_SIZE) {
                 // Update the fly's position
                 fly.setPosition(newX, newY);
             }
@@ -113,12 +138,12 @@ class BoardPanel extends JPanel implements KeyListener {
         super.paintComponent(g);
         Graphics2D g2d = (Graphics2D) g; // Cast Graphics to Graphics2D
         // Draw the board grid
-        for (int x = 0; x < Properties.NUM_CELLS; x++) {
-            for (int y = 0; y < Properties.NUM_CELLS; y++) {
-                int cellX = x * Properties.CELL_SIZE;
-                int cellY = y * Properties.CELL_SIZE;
-                g.setColor(Properties.BACKGROUND_COLOR);
-                g.fillRect(cellX, cellY, Properties.CELL_SIZE, Properties.CELL_SIZE);
+        for (int x = 0; x < NUM_CELLS; x++) {
+            for (int y = 0; y < NUM_CELLS; y++) {
+                int cellX = x * CELL_SIZE;
+                int cellY = y * CELL_SIZE;
+                g.setColor(BACKGROUND_COLOR);
+                g.fillRect(cellX, cellY, CELL_SIZE, CELL_SIZE);
             }
         }
         // Draw obstacles
@@ -143,16 +168,19 @@ class BoardPanel extends JPanel implements KeyListener {
             boolean touchedObstacle = false; // Some time tongue touch many obstacles, we want one hit will touch 1 obstacle.
             for (Obstacle obstacle : obstacles) {
                 if (obstacle.isPointIntersectingObstacle(lizard.getEndTonguePosition())) {
-                    lizard.hitObstacle();
+                    lizard.surprise();
                     touchedObstacle = true;
                 }
             }
-            if (touchedObstacle) {
+            if (touchedObstacle && allowSpaceKey) {
                 scoreBoard.removeHeart();
+                allowSpaceKey = false;
+                System.out.println("this line");
             }
         }
         if (Properties.HEART_VALUE <= 0) {
-            scoreBoard.gameOver(g2d);
+            scoreBoard.gameOver(g2d, (JFrame) SwingUtilities.getWindowAncestor(this));
+            restartButton.setVisible(true);
         }
         // Draw the top score board
         scoreBoard.drawTopBoard(g2d);
@@ -208,7 +236,6 @@ class BoardPanel extends JPanel implements KeyListener {
                 if (allowSpaceKey) {
                     spaceKeyPressed = true;
                     spaceLimitTimer.restart();
-                    allowSpaceKey = false;
                 }
             }
             default -> {
