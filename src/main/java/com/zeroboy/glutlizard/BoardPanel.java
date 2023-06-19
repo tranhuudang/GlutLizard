@@ -9,7 +9,8 @@ import static com.zeroboy.glutlizard.Properties.BOARD_WIDTH;
 import static com.zeroboy.glutlizard.Properties.CELL_SIZE;
 import static com.zeroboy.glutlizard.Properties.FLY_IMAGE;
 import static com.zeroboy.glutlizard.Properties.HEART_VALUE;
-import static com.zeroboy.glutlizard.Properties.LIST_OBSTACLE_IMAGES;
+import static com.zeroboy.glutlizard.Properties.LIST_OBSTACLE_IMAGES_BACK;
+import static com.zeroboy.glutlizard.Properties.LIST_OBSTACLE_IMAGES_FRONT;
 import static com.zeroboy.glutlizard.Properties.LIZARD_IMAGE;
 import static com.zeroboy.glutlizard.Properties.NUM_CELLS;
 import static com.zeroboy.glutlizard.Properties.TIME_LEFT;
@@ -23,6 +24,8 @@ import java.awt.image.BufferedImage;
 import java.util.Random;
 import java.util.List;
 import java.util.ArrayList;
+import javax.swing.border.Border;
+import javax.swing.border.LineBorder;
 
 class BoardPanel extends JPanel implements KeyListener {
 
@@ -30,7 +33,9 @@ class BoardPanel extends JPanel implements KeyListener {
     private final Lizard lizard;
     private final List<Fly> flies;
     private final Random random;
-    private final List<Obstacle> obstacles;
+    private final List<Obstacle> obstaclesBack;
+        private final List<Obstacle> obstaclesFront;
+
 
     private final Timer spaceLimitTimer;
     private Timer flyMovingTimer;
@@ -57,11 +62,17 @@ class BoardPanel extends JPanel implements KeyListener {
         flies = new ArrayList<>();
         scoreBoard = new ScoreBoard();
         scoreBoard.resetScore();
-        obstacles = new ArrayList<>();
+        obstaclesBack = new ArrayList<>();
+                obstaclesFront = new ArrayList<>();
+
         random = new Random();
-        // Create obstacles
-        for (BufferedImage obstacleImage : LIST_OBSTACLE_IMAGES) {
-            obstacles.add(new Obstacle(obstacleImage));
+        // Create obstacles back
+        for (BufferedImage obstacleImage : LIST_OBSTACLE_IMAGES_BACK) {
+            obstaclesBack.add(new Obstacle(obstacleImage));
+        }
+        // Create obstacles back
+        for (BufferedImage obstacleImage : LIST_OBSTACLE_IMAGES_FRONT) {
+            obstaclesFront.add(new Obstacle(obstacleImage));
         }
         // Create three flies at random positions
         for (int i = 0; i < 15; i++) {
@@ -92,6 +103,11 @@ class BoardPanel extends JPanel implements KeyListener {
             }
         });
         restartButton.setBounds((BOARD_WIDTH - 80) / 2, ((BOARD_HEIGHT - 30) / 2) + 40, 80, 30); // Set the button's position and size
+        restartButton.setBackground(BACKGROUND_COLOR);
+        restartButton.setForeground(Color.GREEN);
+        // Create a border instance
+        Border border = new LineBorder(Color.GREEN, 2); // Red border with a thickness of 2 pixels
+        restartButton.setBorder(border);
         restartButton.setVisible(false); // Hide the button initially
         add(restartButton); // Add the button to the panel
     }
@@ -156,12 +172,17 @@ class BoardPanel extends JPanel implements KeyListener {
                 g.fillRect(cellX, cellY, CELL_SIZE, CELL_SIZE);
             }
         }
-        // Draw obstacles
-        for (Obstacle obstacle : obstacles) {
+        // Draw obstacles back
+        for (Obstacle obstacle : obstaclesBack) {
             obstacle.draw(g);
         }
         // Draw the lizard
         lizard.draw(g2d);
+        // Draw obstacles front
+        for (Obstacle obstacle : obstaclesFront) {
+            obstacle.draw(g);
+        }
+        
         // Draw the flies
         for (Fly fly : flies) {
             fly.draw(g2d);
@@ -176,7 +197,13 @@ class BoardPanel extends JPanel implements KeyListener {
                 }
             }
             boolean touchedObstacle = false; // Some time tongue touch many obstacles, we want one hit will touch 1 obstacle.
-            for (Obstacle obstacle : obstacles) {
+            for (Obstacle obstacle : obstaclesBack) {
+                if (obstacle.isPointIntersectingObstacle(lizard.getEndTonguePosition())) {
+                    lizard.surprise();
+                    touchedObstacle = true;
+                }
+            }
+            for (Obstacle obstacle : obstaclesFront) {
                 if (obstacle.isPointIntersectingObstacle(lizard.getEndTonguePosition())) {
                     lizard.surprise();
                     touchedObstacle = true;
@@ -188,7 +215,7 @@ class BoardPanel extends JPanel implements KeyListener {
             }
         }
         if ((HEART_VALUE <= 0) || (TIME_LEFT <= 0)) {
-            scoreBoard.gameOver(g2d, (JFrame) SwingUtilities.getWindowAncestor(this));
+            scoreBoard.gameOverBoard(g2d, (JFrame) SwingUtilities.getWindowAncestor(this));
             flyMovingTimer.stop();
             countDownTimer.stop();
             restartButton.setVisible(true);

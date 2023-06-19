@@ -1,5 +1,6 @@
 package com.zeroboy.glutlizard;
 
+import static com.zeroboy.glutlizard.Properties.BACKGROUND_COLOR;
 import static com.zeroboy.glutlizard.Properties.BOARD_WIDTH;
 import static com.zeroboy.glutlizard.Properties.HEART_LIST;
 import static com.zeroboy.glutlizard.Properties.HEART_VALUE;
@@ -48,20 +49,21 @@ public class ScoreBoard {
         }
     }
 
-    public void gameOver(Graphics2D g, JFrame frame) {
-        g.setColor(Color.BLACK);
+    public void gameOverBoard(Graphics2D g, JFrame frame) {
+        g.setColor(BACKGROUND_COLOR);
         g.fillRect(Properties.BOARD_WIDTH / 2 - 170,
-                Properties.BOARD_HEIGHT / 2 - 80, 340, 180);
+                Properties.BOARD_HEIGHT / 2 - 80, 340, 170);
         g.setColor(Color.GREEN);
         g.setStroke(new BasicStroke(2));
         g.drawRect(Properties.BOARD_WIDTH / 2 - 170,
-                Properties.BOARD_HEIGHT / 2 - 80, 340, 180);
+                Properties.BOARD_HEIGHT / 2 - 80, 340, 170);
         g.setColor(Color.BLACK);
         String scoreText = "GAME OVER";
-        g.setFont(new Font("Arial", Font.BOLD, 36));
+        g.setFont(new Font("Arial", Font.PLAIN, 34));
         g.setColor(Color.GREEN); // Set color to white
         g.drawString(scoreText, Properties.BOARD_WIDTH / 2 - g.getFontMetrics().stringWidth(scoreText) / 2,
                 Properties.BOARD_HEIGHT / 2);
+        BACKGROUND_COLOR = Color.BLACK;
         frame.revalidate(); // Refresh the frame to display the new button
     }
 
