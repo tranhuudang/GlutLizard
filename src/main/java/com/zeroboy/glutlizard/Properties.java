@@ -19,23 +19,24 @@ public class Properties {
     public static final int CELL_SIZE = 10;
     public static final Color BACKGROUND_COLOR = new Color(95, 115, 82);
     public static int SCORE = 0;
+    public static int TIME_LEFT = 60;
     public static List<BufferedImage> HEART_LIST;
     public static int HEART_VALUE = 3;
     public static BufferedImage LIZARD_IMAGE;
     public static BufferedImage FLY_IMAGE;
-    
+
     public static List<BufferedImage> LIST_OBSTACLE_IMAGES;
 
     public Properties() {
         try {
             LIZARD_IMAGE = ImageIO.read(new File("src/resources/lizard-100.png"));
-             FLY_IMAGE = ImageIO.read(new File("src/resources/fly-50.png"));
-             loadObstacleImages();
+            FLY_IMAGE = ImageIO.read(new File("src/resources/fly-50.png"));
+            loadObstacleImages();
         } catch (IOException ex) {
             Logger.getLogger(Properties.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
+
     private void loadObstacleImages() {
         LIST_OBSTACLE_IMAGES = new ArrayList<>();
         // Add obstacle image paths to the list
@@ -72,5 +73,5 @@ public class Properties {
             Logger.getLogger(BoardPanel.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-   
+
 }

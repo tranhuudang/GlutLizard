@@ -1,5 +1,7 @@
 package com.zeroboy.glutlizard;
 
+import static com.zeroboy.glutlizard.Properties.BOARD_HEIGHT;
+import static com.zeroboy.glutlizard.Properties.BOARD_WIDTH;
 import java.awt.EventQueue;
 import javax.swing.JFrame;
 
@@ -11,7 +13,7 @@ public class GlutLizard extends JFrame {
     }
 
     private void initUI() {
-        setSize(Properties.BOARD_WIDTH, Properties.BOARD_HEIGHT);
+        setSize(BOARD_WIDTH,BOARD_HEIGHT);
         BoardPanel boardPanel = new BoardPanel();
         add(boardPanel);
         // Add the key listener to the board panel

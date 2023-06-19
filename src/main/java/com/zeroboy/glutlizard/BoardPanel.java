@@ -1,14 +1,18 @@
 package com.zeroboy.glutlizard;
 
-import com.zeroboy.glutlizard.Components.Obstacle;
-import com.zeroboy.glutlizard.Components.Lizard;
-import com.zeroboy.glutlizard.Components.Fly;
+import com.zeroboy.glutlizard.Models.Obstacle;
+import com.zeroboy.glutlizard.Models.Lizard;
+import com.zeroboy.glutlizard.Models.Fly;
 import static com.zeroboy.glutlizard.Properties.BACKGROUND_COLOR;
+import static com.zeroboy.glutlizard.Properties.BOARD_HEIGHT;
+import static com.zeroboy.glutlizard.Properties.BOARD_WIDTH;
 import static com.zeroboy.glutlizard.Properties.CELL_SIZE;
 import static com.zeroboy.glutlizard.Properties.FLY_IMAGE;
+import static com.zeroboy.glutlizard.Properties.HEART_VALUE;
 import static com.zeroboy.glutlizard.Properties.LIST_OBSTACLE_IMAGES;
 import static com.zeroboy.glutlizard.Properties.LIZARD_IMAGE;
 import static com.zeroboy.glutlizard.Properties.NUM_CELLS;
+import static com.zeroboy.glutlizard.Properties.TIME_LEFT;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -16,14 +20,9 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
 import java.util.Random;
-import javax.imageio.ImageIO;
 import java.util.List;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 class BoardPanel extends JPanel implements KeyListener {
 
@@ -34,6 +33,8 @@ class BoardPanel extends JPanel implements KeyListener {
     private final List<Obstacle> obstacles;
 
     private final Timer spaceLimitTimer;
+    private Timer flyMovingTimer;
+    private Timer countDownTimer;
     private boolean allowSpaceKey;
     private JButton restartButton;
     private final Properties properties;
@@ -46,6 +47,9 @@ class BoardPanel extends JPanel implements KeyListener {
     private boolean spaceKeyPressed = false;
 
     public BoardPanel() {
+        // Default layout will automaticly align button to center, so 
+        // set Layout to null in order to be able to set button position to custom value.
+        setLayout(null);
         createRestartButton();
         properties = new Properties();
         // Load the lizard and fly images from the assets
@@ -64,8 +68,13 @@ class BoardPanel extends JPanel implements KeyListener {
             flies.add(new Fly(400, 300, FLY_IMAGE));
         }
         // Start a timer to update the flies' positions at regular intervals
-        Timer timer = new Timer(50, e -> moveFlies());
-        timer.start();
+        flyMovingTimer = new Timer(50, e -> moveFlies());
+        flyMovingTimer.start();
+        // Count down timer 
+        countDownTimer = new Timer(1000, f -> {
+            TIME_LEFT -= 1;
+        });
+        countDownTimer.start();
         // Space press limiter
         spaceLimitTimer = new Timer(500, e -> {
             allowSpaceKey = true;
@@ -82,15 +91,16 @@ class BoardPanel extends JPanel implements KeyListener {
                 restartGame();
             }
         });
-        restartButton.setBounds(10, 10, 80, 30); // Set the button's position and size
+        restartButton.setBounds((BOARD_WIDTH - 80) / 2, ((BOARD_HEIGHT - 30) / 2) + 40, 80, 30); // Set the button's position and size
         restartButton.setVisible(false); // Hide the button initially
         add(restartButton); // Add the button to the panel
     }
 
     private void restartGame() {
-        System.out.println("hello over");
         // Reset game state
         resetBoard();
+        flyMovingTimer.start();
+        countDownTimer.start();
         // Hide the restart button
         restartButton.setVisible(false);
         // Request focus for keyboard input
@@ -175,11 +185,12 @@ class BoardPanel extends JPanel implements KeyListener {
             if (touchedObstacle && allowSpaceKey) {
                 scoreBoard.removeHeart();
                 allowSpaceKey = false;
-                System.out.println("this line");
             }
         }
-        if (Properties.HEART_VALUE <= 0) {
+        if ((HEART_VALUE <= 0) || (TIME_LEFT <= 0)) {
             scoreBoard.gameOver(g2d, (JFrame) SwingUtilities.getWindowAncestor(this));
+            flyMovingTimer.stop();
+            countDownTimer.stop();
             restartButton.setVisible(true);
         }
         // Draw the top score board
