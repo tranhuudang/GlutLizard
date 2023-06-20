@@ -22,6 +22,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.image.BufferedImage;
@@ -31,7 +33,7 @@ import java.util.ArrayList;
 import javax.swing.border.Border;
 import javax.swing.border.LineBorder;
 
-class BoardPanel extends JPanel implements KeyListener {
+class BoardPanel extends JPanel implements KeyListener, ComponentListener {
 
     private final ScoreBoard scoreBoard;
     private final Lizard lizard;
@@ -100,7 +102,6 @@ class BoardPanel extends JPanel implements KeyListener {
         spaceLimitTimer.start();
     }
 
-    
     // Calculate and return the number of flies based on level
     private int getNumberOfFlies() {
         int numberOfFlies;
@@ -167,7 +168,6 @@ class BoardPanel extends JPanel implements KeyListener {
 
     private void nextGameLevel() {
         // Reset game state
-        
         resetBoard();
         flyMovingTimer.start();
         countDownTimer.start();
@@ -384,5 +384,27 @@ class BoardPanel extends JPanel implements KeyListener {
     @Override
     public void keyTyped(KeyEvent e) {
         // Handle key typed events if needed
+    }
+
+    @Override
+    public void componentMoved(ComponentEvent e) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    @Override
+    public void componentShown(ComponentEvent e) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    @Override
+    public void componentHidden(ComponentEvent e) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    @Override
+    public void componentResized(ComponentEvent e) {
+        BOARD_WIDTH = getWidth();
+        BOARD_HEIGHT = getHeight();
+        repaint();
     }
 }

@@ -18,12 +18,13 @@ public class GlutLizard extends JFrame {
         add(boardPanel);
         // Add the key listener to the board panel
         boardPanel.addKeyListener(boardPanel);
+        boardPanel.addComponentListener(boardPanel);
         // Set the board panel as the focusable component
         boardPanel.setFocusable(true);
         // Request focus for the board panel
         boardPanel.requestFocusInWindow();
         setVisible(true);
-        setResizable(false);
+        setResizable(true);
         setTitle("GlutLizard");
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
