@@ -1,5 +1,6 @@
 package com.zeroboy.glutlizard;
 
+import com.zeroboy.glutlizard.Handlers.LocalStorage;
 import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -19,6 +20,9 @@ public class Properties {
     public static final int CELL_SIZE = 10;
     public static Color BACKGROUND_COLOR = Color.BLACK;
     public static int SCORE = 0;
+    public static int LEVEL = 1;
+    public static int NUMBER_OF_FLIES = 0;
+
     public static int TIME_LEFT = 60;
     public static List<BufferedImage> HEART_LIST;
     public static int HEART_VALUE = 3;
@@ -34,6 +38,7 @@ public class Properties {
             FLY_IMAGE = ImageIO.read(new File("src/resources/fly-50.png"));
             loadObstacleImagesBack();
             loadObstacleImagesFront();
+            LEVEL = LocalStorage.readLevel(LocalStorage.levelFilePath);
         } catch (IOException ex) {
             Logger.getLogger(Properties.class.getName()).log(Level.SEVERE, null, ex);
         }

@@ -9,11 +9,15 @@ import static com.zeroboy.glutlizard.Properties.BOARD_WIDTH;
 import static com.zeroboy.glutlizard.Properties.CELL_SIZE;
 import static com.zeroboy.glutlizard.Properties.FLY_IMAGE;
 import static com.zeroboy.glutlizard.Properties.HEART_VALUE;
+import static com.zeroboy.glutlizard.Properties.LEVEL;
 import static com.zeroboy.glutlizard.Properties.LIST_OBSTACLE_IMAGES_BACK;
 import static com.zeroboy.glutlizard.Properties.LIST_OBSTACLE_IMAGES_FRONT;
 import static com.zeroboy.glutlizard.Properties.LIZARD_IMAGE;
 import static com.zeroboy.glutlizard.Properties.NUM_CELLS;
 import static com.zeroboy.glutlizard.Properties.TIME_LEFT;
+import static com.zeroboy.glutlizard.Properties.NUMBER_OF_FLIES;
+import static com.zeroboy.glutlizard.Properties.SCORE;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -34,14 +38,14 @@ class BoardPanel extends JPanel implements KeyListener {
     private final List<Fly> flies;
     private final Random random;
     private final List<Obstacle> obstaclesBack;
-        private final List<Obstacle> obstaclesFront;
-
+    private final List<Obstacle> obstaclesFront;
 
     private final Timer spaceLimitTimer;
     private Timer flyMovingTimer;
     private Timer countDownTimer;
     private boolean allowSpaceKey;
     private JButton restartButton;
+    private JButton nextLevelButton;
     private final Properties properties;
 
     // Arrow control key
@@ -56,6 +60,7 @@ class BoardPanel extends JPanel implements KeyListener {
         // set Layout to null in order to be able to set button position to custom value.
         setLayout(null);
         createRestartButton();
+        createNextLevelButton();
         properties = new Properties();
         // Load the lizard and fly images from the assets
         lizard = new Lizard(100, 200, LIZARD_IMAGE);
@@ -63,8 +68,7 @@ class BoardPanel extends JPanel implements KeyListener {
         scoreBoard = new ScoreBoard();
         scoreBoard.resetScore();
         obstaclesBack = new ArrayList<>();
-                obstaclesFront = new ArrayList<>();
-
+        obstaclesFront = new ArrayList<>();
         random = new Random();
         // Create obstacles back
         for (BufferedImage obstacleImage : LIST_OBSTACLE_IMAGES_BACK) {
@@ -75,7 +79,9 @@ class BoardPanel extends JPanel implements KeyListener {
             obstaclesFront.add(new Obstacle(obstacleImage));
         }
         // Create three flies at random positions
-        for (int i = 0; i < 15; i++) {
+        int numberOfFlies = getNumberOfFlies();
+        NUMBER_OF_FLIES = numberOfFlies;
+        for (int i = 0; i < numberOfFlies; i++) {
             flies.add(new Fly(400, 300, FLY_IMAGE));
         }
         // Start a timer to update the flies' positions at regular intervals
@@ -94,6 +100,21 @@ class BoardPanel extends JPanel implements KeyListener {
         spaceLimitTimer.start();
     }
 
+    
+    // Calculate and return the number of flies based on level
+    private int getNumberOfFlies() {
+        int numberOfFlies;
+        if (LEVEL <= 3) {
+            numberOfFlies = 1 * LEVEL;
+        } else if (LEVEL > 3 && LEVEL < 5) {
+            numberOfFlies = 2 * LEVEL;
+        } else {
+            numberOfFlies = 3 * LEVEL;
+        }
+        return numberOfFlies;
+    }
+
+    // Create restart button displayed in Game Over board.
     private void createRestartButton() {
         restartButton = new JButton("Restart");
         restartButton.addActionListener(new ActionListener() {
@@ -112,6 +133,25 @@ class BoardPanel extends JPanel implements KeyListener {
         add(restartButton); // Add the button to the panel
     }
 
+    // Create next level button displayed in Victory
+    private void createNextLevelButton() {
+        nextLevelButton = new JButton("Next Level");
+        nextLevelButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                nextGameLevel();
+            }
+        });
+        nextLevelButton.setBounds((BOARD_WIDTH - 80) / 2, ((BOARD_HEIGHT - 30) / 2) + 40, 80, 30); // Set the button's position and size
+        nextLevelButton.setBackground(BACKGROUND_COLOR);
+        nextLevelButton.setForeground(Color.GREEN);
+        // Create a border instance
+        Border border = new LineBorder(Color.GREEN, 2); // Red border with a thickness of 2 pixels
+        nextLevelButton.setBorder(border);
+        nextLevelButton.setVisible(false); // Hide the button initially
+        add(nextLevelButton); // Add the button to the panel
+    }
+
     private void restartGame() {
         // Reset game state
         resetBoard();
@@ -125,12 +165,28 @@ class BoardPanel extends JPanel implements KeyListener {
         repaint();
     }
 
+    private void nextGameLevel() {
+        // Reset game state
+        
+        resetBoard();
+        flyMovingTimer.start();
+        countDownTimer.start();
+        // Hide the restart button
+        nextLevelButton.setVisible(false);
+        // Request focus for keyboard input
+        requestFocus();
+        // Repaint the board
+        repaint();
+    }
+
     private void resetBoard() {
         // Reset lizard position
         lizard.setPosition(100, 200);
         // Reset flies
         flies.clear();
-        for (int i = 0; i < 15; i++) {
+        var numberOfFlies = getNumberOfFlies();
+        NUMBER_OF_FLIES = numberOfFlies;
+        for (int i = 0; i < numberOfFlies; i++) {
             flies.add(new Fly(400, 300, FLY_IMAGE));
         }
         // Reset score
@@ -170,6 +226,8 @@ class BoardPanel extends JPanel implements KeyListener {
                 int cellY = y * CELL_SIZE;
                 g.setColor(BACKGROUND_COLOR);
                 g.fillRect(cellX, cellY, CELL_SIZE, CELL_SIZE);
+                g.setColor(Color.darkGray);
+                g.drawRect(cellX, cellY, CELL_SIZE, CELL_SIZE);
             }
         }
         // Draw obstacles back
@@ -182,7 +240,6 @@ class BoardPanel extends JPanel implements KeyListener {
         for (Obstacle obstacle : obstaclesFront) {
             obstacle.draw(g);
         }
-        
         // Draw the flies
         for (Fly fly : flies) {
             fly.draw(g2d);
@@ -214,11 +271,17 @@ class BoardPanel extends JPanel implements KeyListener {
                 allowSpaceKey = false;
             }
         }
-        if ((HEART_VALUE <= 0) || (TIME_LEFT <= 0)) {
+        if ((HEART_VALUE < 0) || (TIME_LEFT <= 0)) {
             scoreBoard.gameOverBoard(g2d, (JFrame) SwingUtilities.getWindowAncestor(this));
             flyMovingTimer.stop();
             countDownTimer.stop();
             restartButton.setVisible(true);
+        } else if (SCORE == NUMBER_OF_FLIES) {
+            LEVEL += 1;
+            scoreBoard.victoryBoard(g2d, (JFrame) SwingUtilities.getWindowAncestor(this));
+            flyMovingTimer.stop();
+            countDownTimer.stop();
+            nextLevelButton.setVisible(true);
         }
         // Draw the top score board
         scoreBoard.drawTopBoard(g2d);
