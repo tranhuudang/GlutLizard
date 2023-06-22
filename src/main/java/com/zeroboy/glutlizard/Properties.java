@@ -17,7 +17,7 @@ public class Properties {
     public static  int BOARD_WIDTH = 1280;
     public static  int BOARD_HEIGHT = 700;
     public static final int NUM_CELLS = 500;
-    public static final int CELL_SIZE = 10;
+    public static final int CELL_SIZE = 8;
     public static Color BACKGROUND_COLOR = Color.BLACK;
     public static int SCORE = 0;
     public static int LEVEL = 1;

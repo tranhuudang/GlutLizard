@@ -1,5 +1,6 @@
 package com.zeroboy.glutlizard;
 
+import com.zeroboy.glutlizard.Handlers.LocalStorage;
 import com.zeroboy.glutlizard.Models.Obstacle;
 import com.zeroboy.glutlizard.Models.Lizard;
 import com.zeroboy.glutlizard.Models.Fly;
@@ -65,7 +66,7 @@ class BoardPanel extends JPanel implements KeyListener, ComponentListener {
         createNextLevelButton();
         properties = new Properties();
         // Load the lizard and fly images from the assets
-        lizard = new Lizard(100, 200, LIZARD_IMAGE);
+        lizard = new Lizard((BOARD_WIDTH - LIZARD_IMAGE.getWidth())/2 , (BOARD_HEIGHT - LIZARD_IMAGE.getHeight())/2, LIZARD_IMAGE);
         flies = new ArrayList<>();
         scoreBoard = new ScoreBoard();
         scoreBoard.resetScore();
@@ -167,7 +168,11 @@ class BoardPanel extends JPanel implements KeyListener, ComponentListener {
     }
 
     private void nextGameLevel() {
+        System.out.println("Move to the next level.");
         // Reset game state
+        scoreBoard.levelUp();
+        // Save level to local storage
+        LocalStorage.writeLevel();
         resetBoard();
         flyMovingTimer.start();
         countDownTimer.start();
@@ -181,7 +186,7 @@ class BoardPanel extends JPanel implements KeyListener, ComponentListener {
 
     private void resetBoard() {
         // Reset lizard position
-        lizard.setPosition(100, 200);
+        lizard.setPosition((BOARD_WIDTH - LIZARD_IMAGE.getWidth())/2 , (BOARD_HEIGHT - LIZARD_IMAGE.getHeight())/2);
         // Reset flies
         flies.clear();
         var numberOfFlies = getNumberOfFlies();
@@ -226,7 +231,7 @@ class BoardPanel extends JPanel implements KeyListener, ComponentListener {
                 int cellY = y * CELL_SIZE;
                 g.setColor(BACKGROUND_COLOR);
                 g.fillRect(cellX, cellY, CELL_SIZE, CELL_SIZE);
-                g.setColor(Color.darkGray);
+                //g.setColor(Color.DARK_GRAY);
                 g.drawRect(cellX, cellY, CELL_SIZE, CELL_SIZE);
             }
         }
@@ -277,7 +282,7 @@ class BoardPanel extends JPanel implements KeyListener, ComponentListener {
             countDownTimer.stop();
             restartButton.setVisible(true);
         } else if (SCORE == NUMBER_OF_FLIES) {
-            LEVEL += 1;
+            System.out.println("Victory");
             scoreBoard.victoryBoard(g2d, (JFrame) SwingUtilities.getWindowAncestor(this));
             flyMovingTimer.stop();
             countDownTimer.stop();
@@ -405,6 +410,14 @@ class BoardPanel extends JPanel implements KeyListener, ComponentListener {
     public void componentResized(ComponentEvent e) {
         BOARD_WIDTH = getWidth();
         BOARD_HEIGHT = getHeight();
+        //
+        // Update the position of the restart button when the component (panel) is resized
+        int buttonX = (getWidth() - 80) / 2;
+        int buttonY = ((getHeight() - 30) / 2) + 40;
+        restartButton.setBounds(buttonX, buttonY, 80, 30);
+        // Update the position of the next level button when the component (panel) is resized
+        nextLevelButton.setBounds(buttonX, buttonY, 80, 30);
+        //
         repaint();
     }
 }

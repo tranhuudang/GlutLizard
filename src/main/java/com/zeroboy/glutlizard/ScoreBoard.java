@@ -85,8 +85,7 @@ public class ScoreBoard {
                 Properties.BOARD_HEIGHT / 2);
         BACKGROUND_COLOR = Color.BLACK;
         frame.revalidate(); // Refresh the frame to display the new button
-        // Save level to local storage
-        LocalStorage.writeLevel();
+        
     }
 
     
@@ -143,5 +142,9 @@ public class ScoreBoard {
         }
     }
     
+    
+    public void levelUp(){
+        LEVEL = LEVEL +1;
+    }
     
 }
