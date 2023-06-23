@@ -66,7 +66,7 @@ public class Lizard {
         return endTonguePosition;
     }
 
-    private void moving() {
+    private void movingAnimation() {
         steps = steps + 1;
         try {
             if (steps % 2 == 0) {
@@ -81,22 +81,22 @@ public class Lizard {
 
     public void moveLeft() {
         x -= Properties.CELL_SIZE;
-        moving();
+        movingAnimation();
     }
 
     public void moveRight() {
         x += Properties.CELL_SIZE;
-        moving();
+        movingAnimation();
     }
 
     public void moveUp() {
         y -= Properties.CELL_SIZE;
-        moving();
+        movingAnimation();
     }
 
     public void moveDown() {
         y += Properties.CELL_SIZE;
-        moving();
+        movingAnimation();
     }
 
     public void setPosition(int x, int y) {
