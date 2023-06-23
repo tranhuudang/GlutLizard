@@ -66,7 +66,8 @@ final class BoardPanel extends JPanel implements KeyListener, ComponentListener,
         createNextLevelButton();
         properties = new Properties();
         // Load the lizard and fly images from the assets
-        lizard = new Lizard(new Point((BOARD_WIDTH - LIZARD_IMAGE.getWidth())/2 , (BOARD_HEIGHT - LIZARD_IMAGE.getHeight())/2), LIZARD_IMAGE);
+        var initLizardPosition = new Point((BOARD_WIDTH - LIZARD_IMAGE.getWidth())/2 , (BOARD_HEIGHT - LIZARD_IMAGE.getHeight())/2);
+        lizard = new Lizard(initLizardPosition, LIZARD_IMAGE);
         flies = new ArrayList<>();
         scoreBoard = new ScoreBoard();
         scoreBoard.resetScore();
@@ -254,6 +255,8 @@ final class BoardPanel extends JPanel implements KeyListener, ComponentListener,
             fly.draw(g2d);
         }
         // Draw the tongue if Space key is pressed
+        // We use classic for loop instead of for(Objects object: list) loop to avoid ConcurrentModificationException
+        // as for(Objects object: list) not allow to modify list while iterating.
         if (spaceKeyPressed) {
             lizard.drawLizardTongue(g2d);
             for (int i=1; i < flies.size(); i++) {
