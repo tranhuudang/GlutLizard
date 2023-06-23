@@ -4,10 +4,6 @@ import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.image.BufferedImage;
 
-/**
- *
- * @author zero
- */
 public interface IGameObject {
 
     // Get current X coodinate of Object

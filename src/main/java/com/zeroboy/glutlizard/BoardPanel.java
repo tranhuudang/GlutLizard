@@ -1,20 +1,20 @@
 package com.zeroboy.glutlizard;
 
 import com.zeroboy.glutlizard.Handlers.LocalStorage;
+import com.zeroboy.glutlizard.Interfaces.IFly;
+import com.zeroboy.glutlizard.Interfaces.ILizard;
+import com.zeroboy.glutlizard.Interfaces.IObstacle;
 import com.zeroboy.glutlizard.Models.Obstacle;
 import com.zeroboy.glutlizard.Models.Lizard;
 import com.zeroboy.glutlizard.Models.Fly;
-import static com.zeroboy.glutlizard.Properties.BACKGROUND_COLOR;
 import static com.zeroboy.glutlizard.Properties.BOARD_HEIGHT;
 import static com.zeroboy.glutlizard.Properties.BOARD_WIDTH;
-import static com.zeroboy.glutlizard.Properties.CELL_SIZE;
 import static com.zeroboy.glutlizard.Properties.FLY_IMAGE;
 import static com.zeroboy.glutlizard.Properties.HEART_VALUE;
 import static com.zeroboy.glutlizard.Properties.LEVEL;
 import static com.zeroboy.glutlizard.Properties.LIST_OBSTACLE_IMAGES_BACK;
 import static com.zeroboy.glutlizard.Properties.LIST_OBSTACLE_IMAGES_FRONT;
 import static com.zeroboy.glutlizard.Properties.LIZARD_IMAGE;
-import static com.zeroboy.glutlizard.Properties.NUM_CELLS;
 import static com.zeroboy.glutlizard.Properties.TIME_LEFT;
 import static com.zeroboy.glutlizard.Properties.NUMBER_OF_FLIES;
 import static com.zeroboy.glutlizard.Properties.SCORE;
@@ -34,14 +34,14 @@ import java.util.ArrayList;
 import javax.swing.border.Border;
 import javax.swing.border.LineBorder;
 
-final class BoardPanel extends JPanel implements KeyListener, ComponentListener {
+final class BoardPanel extends JPanel implements KeyListener, ComponentListener, Constants {
 
     private final ScoreBoard scoreBoard;
-    private final Lizard lizard;
-    private final List<Fly> flies;
+    private final ILizard lizard;
+    private final List<IFly> flies;
     private final Random random;
-    private final List<Obstacle> obstaclesBack;
-    private final List<Obstacle> obstaclesFront;
+    private final List<IObstacle> obstaclesBack;
+    private final List<IObstacle> obstaclesFront;
 
     private final Timer spaceLimitTimer;
     private Timer flyMovingTimer;
@@ -105,8 +105,8 @@ final class BoardPanel extends JPanel implements KeyListener, ComponentListener 
     }
     
     public Point generateRandomPosition() {
-        var x = random.nextInt(Properties.BOARD_WIDTH);
-        var y = random.nextInt(Properties.BOARD_HEIGHT);
+        var x = random.nextInt(BOARD_WIDTH);
+        var y = random.nextInt(BOARD_HEIGHT);
         return new Point(x,y);
     }
 
@@ -145,11 +145,8 @@ final class BoardPanel extends JPanel implements KeyListener, ComponentListener 
     // Create next level button displayed in Victory
     private void createNextLevelButton() {
         nextLevelButton = new JButton("Next Level");
-        nextLevelButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                nextGameLevel();
-            }
+        nextLevelButton.addActionListener((ActionEvent e) -> {
+            nextGameLevel();
         });
         nextLevelButton.setBounds((BOARD_WIDTH - 80) / 2, ((BOARD_HEIGHT - 30) / 2) + 40, 80, 30); // Set the button's position and size
         nextLevelButton.setBackground(BACKGROUND_COLOR);
@@ -210,7 +207,7 @@ final class BoardPanel extends JPanel implements KeyListener, ComponentListener 
 
     private void moveFlies() {
         // Update the positions of all flies
-        for (Fly fly : flies) {
+        for (IFly fly : flies) {
             // Generate random values to update the fly's position
             int deltaX = random.nextInt(3) - 1; // Random value between -1 and 1
             int deltaY = random.nextInt(3) - 1; // Random value between -1 and 1
@@ -243,36 +240,36 @@ final class BoardPanel extends JPanel implements KeyListener, ComponentListener 
             }
         }
         // Draw obstacles back
-        for (Obstacle obstacle : obstaclesBack) {
+        for (IObstacle obstacle : obstaclesBack) {
             obstacle.draw(g2d);
         }
         // Draw the lizard
         lizard.draw(g2d);
         // Draw obstacles front
-        for (Obstacle obstacle : obstaclesFront) {
+        for (IObstacle obstacle : obstaclesFront) {
             obstacle.draw(g2d);
         }
         // Draw the flies
-        for (Fly fly : flies) {
+        for (IFly fly : flies) {
             fly.draw(g2d);
         }
         // Draw the tongue if Space key is pressed
         if (spaceKeyPressed) {
             lizard.drawLizardTongue(g2d);
-            for (Fly fly : flies) {
-                if (fly.isPointIntersectingWithObject(lizard.getEndTonguePosition())) {
-                    flies.remove(fly);
+            for (int i=1; i < flies.size(); i++) {
+                if (flies.get(i).isPointIntersectingWithObject(lizard.getEndTonguePosition())) {
+                    flies.remove(i);
                     Properties.SCORE = Properties.SCORE + 1;
                 }
             }
             boolean touchedObstacle = false; // Some time tongue touch many obstacles, we want one hit will touch 1 obstacle.
-            for (Obstacle obstacle : obstaclesBack) {
+            for (IObstacle obstacle : obstaclesBack) {
                 if (obstacle.isPointIntersectingWithObject(lizard.getEndTonguePosition())) {
                     lizard.surprise();
                     touchedObstacle = true;
                 }
             }
-            for (Obstacle obstacle : obstaclesFront) {
+            for (IObstacle obstacle : obstaclesFront) {
                 if (obstacle.isPointIntersectingWithObject(lizard.getEndTonguePosition())) {
                     lizard.surprise();
                     touchedObstacle = true;

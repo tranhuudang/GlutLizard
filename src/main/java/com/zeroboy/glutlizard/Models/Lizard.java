@@ -1,5 +1,7 @@
 package com.zeroboy.glutlizard.Models;
 
+import com.zeroboy.glutlizard.Constants;
+import com.zeroboy.glutlizard.Interfaces.ILizard;
 import com.zeroboy.glutlizard.Properties;
 import java.awt.BasicStroke;
 import java.awt.Color;
@@ -16,9 +18,8 @@ import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import javax.swing.Timer;
 
-public class Lizard extends GameObject {
+public class Lizard extends GameObject implements ILizard, Constants {
 
-    
     private Point endTonguePosition = new Point(0, 0);
     private double rotationAngle;
     private int tongueLength = 100;
@@ -28,20 +29,24 @@ public class Lizard extends GameObject {
     public Lizard(Point position, BufferedImage image) {
         super(position, image);
     }
-    
+
+    @Override
     public int getTongueLength() {
         return tongueLength;
     }
 
+    @Override
     public void setTongueLength(int newTongueLength) {
         this.tongueLength = newTongueLength;
     }
 
+    @Override
     public Point getEndTonguePosition() {
         return endTonguePosition;
     }
 
-    private void movingAnimation() {
+    @Override
+    public void movingAnimation() {
         steps = steps + 1;
         try {
             if (steps % 2 == 0) {
@@ -54,35 +59,40 @@ public class Lizard extends GameObject {
         }
     }
 
+    @Override
     public void moveLeft() {
-        setX(getX()- Properties.CELL_SIZE); 
+        setX(getX() - CELL_SIZE);
         movingAnimation();
     }
 
+    @Override
     public void moveRight() {
-        setX(getX()+ Properties.CELL_SIZE); 
+        setX(getX() + CELL_SIZE);
         movingAnimation();
     }
 
+    @Override
     public void moveUp() {
-        setY(getY()- Properties.CELL_SIZE); 
+        setY(getY() - CELL_SIZE);
         movingAnimation();
     }
 
+    @Override
     public void moveDown() {
-        setY(getY()+ Properties.CELL_SIZE); 
+        setY(getY() + CELL_SIZE);
         movingAnimation();
     }
 
+    @Override
     public void rotateClockwise() {
         rotationAngle += Math.toRadians(20);
     }
 
+    @Override
     public void rotateCounterClockwise() {
         rotationAngle -= Math.toRadians(20);
     }
 
-    
     @Override
     public void draw(Graphics2D g) {
         AffineTransform oldTransform = g.getTransform();
@@ -93,11 +103,13 @@ public class Lizard extends GameObject {
         g.setTransform(oldTransform);
     }
 
+    @Override
     public double getRotationAngle() {
         return rotationAngle;
     }
 
     // Draw the tongue if Space key is pressed
+    @Override
     public void drawLizardTongue(Graphics2D g2d) {
         // Get the current angle of the lizard
         double angle = 70 - getRotationAngle();
@@ -128,6 +140,7 @@ public class Lizard extends GameObject {
         g2d.drawLine(startX, startY, endTongueX, endTongueY);
     }
 
+    @Override
     public void surprise() {
         try {
             setObjectImage(ImageIO.read(new File("src/resources/lizard-100-hitObstacle.png")));

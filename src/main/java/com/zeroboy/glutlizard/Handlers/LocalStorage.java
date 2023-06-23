@@ -1,9 +1,6 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package com.zeroboy.glutlizard.Handlers;
 
+import com.zeroboy.glutlizard.Constants;
 import static com.zeroboy.glutlizard.Properties.LEVEL;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -16,16 +13,13 @@ import java.io.IOException;
  *
  * @author zero
  */
-public class LocalStorage {
-
-    public static String directoryPath = "C:\\Users\\zero\\AppData\\Local\\GlutLizard";
-    public static String levelFilePath = "C:\\Users\\zero\\AppData\\Local\\GlutLizard\\Level.txt";
+public class LocalStorage implements Constants{
 
     public static void writeLevel() {
-        if (!directoryChecker(directoryPath)) {
-            dicrectoryCreator(directoryPath);
+        if (!directoryChecker(DIRECTORY_PATH)) {
+            dicrectoryCreator(DIRECTORY_PATH);
         }
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(levelFilePath))) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(LEVEL_FILE_PATH))) {
             String text = Integer.toString(LEVEL);
             writer.write(text);
             System.out.println("File saved successfully.");
@@ -35,7 +29,7 @@ public class LocalStorage {
     }
 
     public static int readLevel(String filePath) {
-        if (!fileExist(levelFilePath)) {
+        if (!fileExist(LEVEL_FILE_PATH)) {
             return 1;
         } else {
             try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {

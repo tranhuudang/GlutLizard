@@ -5,7 +5,7 @@ import static com.zeroboy.glutlizard.Properties.BOARD_WIDTH;
 import java.awt.EventQueue;
 import javax.swing.JFrame;
 
-public class GlutLizard extends JFrame {
+public class GlutLizard extends JFrame implements Constants {
 
     public GlutLizard() {
         initUI();
@@ -25,7 +25,7 @@ public class GlutLizard extends JFrame {
         boardPanel.requestFocusInWindow();
         setVisible(true);
         setResizable(true);
-        setTitle("GlutLizard");
+        setTitle(GAME_TITLE);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         

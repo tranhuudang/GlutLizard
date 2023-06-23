@@ -6,10 +6,6 @@ import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.image.BufferedImage;
 
-/**
- *
- * @author zero
- */
 public class GameObject implements IGameObject {
 
     private int x;

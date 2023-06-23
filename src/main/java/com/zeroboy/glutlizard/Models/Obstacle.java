@@ -1,11 +1,10 @@
 package com.zeroboy.glutlizard.Models;
 
-import java.awt.Graphics2D;
+import com.zeroboy.glutlizard.Interfaces.IObstacle;
 import java.awt.Point;
 import java.awt.image.BufferedImage;
 
-public class Obstacle extends GameObject {
-
+public class Obstacle extends GameObject implements IObstacle {
 
     public Obstacle(Point position, BufferedImage image) {
         super(position,image);
