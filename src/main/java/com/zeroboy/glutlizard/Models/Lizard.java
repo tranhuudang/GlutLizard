@@ -16,50 +16,25 @@ import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import javax.swing.Timer;
 
-public class Lizard {
+public class Lizard extends GameObject {
 
-    private int x;
-    private int y;
+    
     private Point endTonguePosition = new Point(0, 0);
-    private BufferedImage image;
     private double rotationAngle;
     private int tongueLength = 100;
     private final int tongueWidth = 8;
     private int steps = 0;
 
-    public Lizard(int x, int y, BufferedImage image) {
-        this.x = x;
-        this.y = y;
-        this.image = image;
-        this.rotationAngle = 0.0;
+    public Lizard(Point position, BufferedImage image) {
+        super(position, image);
     }
-
-    public void setLizardImage(BufferedImage image) {
-        this.image = image;
-    }
-
+    
     public int getTongueLength() {
         return tongueLength;
     }
 
     public void setTongueLength(int newTongueLength) {
         this.tongueLength = newTongueLength;
-    }
-
-    public int getX() {
-        return x;
-    }
-
-    public void setX(int x) {
-        this.x = x;
-    }
-
-    public int getY() {
-        return y;
-    }
-
-    public void setY(int y) {
-        this.y = y;
     }
 
     public Point getEndTonguePosition() {
@@ -70,9 +45,9 @@ public class Lizard {
         steps = steps + 1;
         try {
             if (steps % 2 == 0) {
-                this.image = ImageIO.read(new File("src/resources/lizard-100-1.png"));
+                setObjectImage(ImageIO.read(new File("src/resources/lizard-100-1.png")));
             } else {
-                this.image = ImageIO.read(new File("src/resources/lizard-100-2.png"));
+                setObjectImage(ImageIO.read(new File("src/resources/lizard-100-2.png")));
             }
         } catch (IOException ex) {
             Logger.getLogger(Lizard.class.getName()).log(Level.SEVERE, null, ex);
@@ -80,28 +55,23 @@ public class Lizard {
     }
 
     public void moveLeft() {
-        x -= Properties.CELL_SIZE;
+        setX(getX()- Properties.CELL_SIZE); 
         movingAnimation();
     }
 
     public void moveRight() {
-        x += Properties.CELL_SIZE;
+        setX(getX()+ Properties.CELL_SIZE); 
         movingAnimation();
     }
 
     public void moveUp() {
-        y -= Properties.CELL_SIZE;
+        setY(getY()- Properties.CELL_SIZE); 
         movingAnimation();
     }
 
     public void moveDown() {
-        y += Properties.CELL_SIZE;
+        setY(getY()+ Properties.CELL_SIZE); 
         movingAnimation();
-    }
-
-    public void setPosition(int x, int y) {
-        this.x = x;
-        this.y = y;
     }
 
     public void rotateClockwise() {
@@ -112,12 +82,14 @@ public class Lizard {
         rotationAngle -= Math.toRadians(20);
     }
 
+    
+    @Override
     public void draw(Graphics2D g) {
         AffineTransform oldTransform = g.getTransform();
         AffineTransform newTransform = (AffineTransform) oldTransform.clone();
-        newTransform.rotate(rotationAngle, x + image.getWidth() / 2, y + image.getHeight() / 2);
+        newTransform.rotate(rotationAngle, getX() + getObjectImage().getWidth() / 2, getY() + getObjectImage().getHeight() / 2);
         g.setTransform(newTransform);
-        g.drawImage(image, x, y, null);
+        g.drawImage(getObjectImage(), getX(), getY(), null);
         g.setTransform(oldTransform);
     }
 
@@ -158,10 +130,10 @@ public class Lizard {
 
     public void surprise() {
         try {
-            this.image = ImageIO.read(new File("src/resources/lizard-100-hitObstacle.png"));
+            setObjectImage(ImageIO.read(new File("src/resources/lizard-100-hitObstacle.png")));
             Timer stopTimer = new Timer(500, e -> {
                 try {
-                    this.image = ImageIO.read(new File("src/resources/lizard-100.png"));
+                    setObjectImage(ImageIO.read(new File("src/resources/lizard-100.png")));
                 } catch (IOException ex) {
                     Logger.getLogger(Lizard.class.getName()).log(Level.SEVERE, null, ex);
                 }
@@ -172,4 +144,5 @@ public class Lizard {
             Logger.getLogger(Lizard.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+
 }

@@ -34,7 +34,7 @@ import java.util.ArrayList;
 import javax.swing.border.Border;
 import javax.swing.border.LineBorder;
 
-class BoardPanel extends JPanel implements KeyListener, ComponentListener {
+final class BoardPanel extends JPanel implements KeyListener, ComponentListener {
 
     private final ScoreBoard scoreBoard;
     private final Lizard lizard;
@@ -66,7 +66,7 @@ class BoardPanel extends JPanel implements KeyListener, ComponentListener {
         createNextLevelButton();
         properties = new Properties();
         // Load the lizard and fly images from the assets
-        lizard = new Lizard((BOARD_WIDTH - LIZARD_IMAGE.getWidth())/2 , (BOARD_HEIGHT - LIZARD_IMAGE.getHeight())/2, LIZARD_IMAGE);
+        lizard = new Lizard(new Point((BOARD_WIDTH - LIZARD_IMAGE.getWidth())/2 , (BOARD_HEIGHT - LIZARD_IMAGE.getHeight())/2), LIZARD_IMAGE);
         flies = new ArrayList<>();
         scoreBoard = new ScoreBoard();
         scoreBoard.resetScore();
@@ -75,17 +75,18 @@ class BoardPanel extends JPanel implements KeyListener, ComponentListener {
         random = new Random();
         // Create obstacles back
         for (BufferedImage obstacleImage : LIST_OBSTACLE_IMAGES_BACK) {
-            obstaclesBack.add(new Obstacle(obstacleImage));
+            
+            obstaclesBack.add(new Obstacle(generateRandomPosition(), obstacleImage));
         }
         // Create obstacles back
         for (BufferedImage obstacleImage : LIST_OBSTACLE_IMAGES_FRONT) {
-            obstaclesFront.add(new Obstacle(obstacleImage));
+            obstaclesFront.add(new Obstacle(generateRandomPosition(), obstacleImage));
         }
         // Create three flies at random positions
         int numberOfFlies = getNumberOfFlies();
         NUMBER_OF_FLIES = numberOfFlies;
         for (int i = 0; i < numberOfFlies; i++) {
-            flies.add(new Fly(400, 300, FLY_IMAGE));
+            flies.add(new Fly(new Point(400, 300), FLY_IMAGE));
         }
         // Start a timer to update the flies' positions at regular intervals
         flyMovingTimer = new Timer(50, e -> moveFlies());
@@ -101,6 +102,12 @@ class BoardPanel extends JPanel implements KeyListener, ComponentListener {
         });
         spaceLimitTimer.setRepeats(false); // Only fire once
         spaceLimitTimer.start();
+    }
+    
+    public Point generateRandomPosition() {
+        var x = random.nextInt(Properties.BOARD_WIDTH);
+        var y = random.nextInt(Properties.BOARD_HEIGHT);
+        return new Point(x,y);
     }
 
     // Calculate and return the number of flies based on level
@@ -192,7 +199,7 @@ class BoardPanel extends JPanel implements KeyListener, ComponentListener {
         var numberOfFlies = getNumberOfFlies();
         NUMBER_OF_FLIES = numberOfFlies;
         for (int i = 0; i < numberOfFlies; i++) {
-            flies.add(new Fly(400, 300, FLY_IMAGE));
+            flies.add(new Fly(new Point(400, 300), FLY_IMAGE));
         }
         // Reset score
         scoreBoard.resetScore();
@@ -237,13 +244,13 @@ class BoardPanel extends JPanel implements KeyListener, ComponentListener {
         }
         // Draw obstacles back
         for (Obstacle obstacle : obstaclesBack) {
-            obstacle.draw(g);
+            obstacle.draw(g2d);
         }
         // Draw the lizard
         lizard.draw(g2d);
         // Draw obstacles front
         for (Obstacle obstacle : obstaclesFront) {
-            obstacle.draw(g);
+            obstacle.draw(g2d);
         }
         // Draw the flies
         for (Fly fly : flies) {
@@ -253,20 +260,20 @@ class BoardPanel extends JPanel implements KeyListener, ComponentListener {
         if (spaceKeyPressed) {
             lizard.drawLizardTongue(g2d);
             for (Fly fly : flies) {
-                if (fly.isPointIntersectingFly(lizard.getEndTonguePosition())) {
+                if (fly.isPointIntersectingWithObject(lizard.getEndTonguePosition())) {
                     flies.remove(fly);
                     Properties.SCORE = Properties.SCORE + 1;
                 }
             }
             boolean touchedObstacle = false; // Some time tongue touch many obstacles, we want one hit will touch 1 obstacle.
             for (Obstacle obstacle : obstaclesBack) {
-                if (obstacle.isPointIntersectingObstacle(lizard.getEndTonguePosition())) {
+                if (obstacle.isPointIntersectingWithObject(lizard.getEndTonguePosition())) {
                     lizard.surprise();
                     touchedObstacle = true;
                 }
             }
             for (Obstacle obstacle : obstaclesFront) {
-                if (obstacle.isPointIntersectingObstacle(lizard.getEndTonguePosition())) {
+                if (obstacle.isPointIntersectingWithObject(lizard.getEndTonguePosition())) {
                     lizard.surprise();
                     touchedObstacle = true;
                 }
