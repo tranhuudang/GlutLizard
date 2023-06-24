@@ -9,11 +9,13 @@ public class GlutLizard extends JFrame implements Constants {
 
     public GlutLizard() {
         initUI();
-        
     }
 
     private void initUI() {
-        setSize(BOARD_WIDTH,BOARD_HEIGHT);
+        setSize(BOARD_WIDTH, BOARD_HEIGHT);
+//        ImageIcon icon = new ImageIcon("src/resources/icon-128.ico");
+//        setDefaultLookAndFeelDecorated(true);
+        // setIconImage(icon.getImage());
         BoardPanel boardPanel = new BoardPanel();
         add(boardPanel);
         // Add the key listener to the board panel
@@ -28,7 +30,6 @@ public class GlutLizard extends JFrame implements Constants {
         setTitle(GAME_TITLE);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        
     }
 
     public static void main(String[] args) {

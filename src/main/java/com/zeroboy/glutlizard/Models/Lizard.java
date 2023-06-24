@@ -22,7 +22,7 @@ import javax.swing.Timer;
 public class Lizard extends GameObject implements ILizard, Constants {
 
     private Point endTonguePosition = new Point(0, 0);
-    private double rotationAngle;
+    private double rotationAngle = 0;
     private int tongueLength = 100;
     private final int tongueWidth = 8;
     private int steps = 0;

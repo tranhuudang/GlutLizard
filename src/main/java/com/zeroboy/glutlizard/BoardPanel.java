@@ -101,7 +101,7 @@ final class BoardPanel extends JPanel implements KeyListener, ComponentListener,
     
     public Point generateRandomPosition() {
         var x = random.nextInt(BOARD_WIDTH);
-        var y = random.nextInt(BOARD_HEIGHT);
+        var y = random.nextInt(BOARD_HEIGHT - 20);
         return new Point(x, y);
     }
 
