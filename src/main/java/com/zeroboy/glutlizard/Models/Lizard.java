@@ -58,17 +58,6 @@ public class Lizard extends GameObject implements ILizard, Constants {
         }
     }
 
-    @Override
-    public void moveLeft() {
-        setX(getX() - CELL_SIZE);
-        movingAnimation();
-    }
-
-    @Override
-    public void moveRight() {
-        setX(getX() + CELL_SIZE);
-        movingAnimation();
-    }
 
     @Override
     public void moveUp() {

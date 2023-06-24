@@ -51,11 +51,6 @@ final class BoardPanel extends JPanel implements KeyListener, ComponentListener,
     private JButton nextLevelButton;
     private final Properties properties;
 
-    // Arrow control key
-    private boolean upKeyPressed = false;
-    private boolean leftKeyPressed = false;
-    private boolean downKeyPressed = false;
-    private boolean rightKeyPressed = false;
     private boolean spaceKeyPressed = false;
 
     public BoardPanel() {
@@ -325,20 +320,7 @@ final class BoardPanel extends JPanel implements KeyListener, ComponentListener,
             default -> {
             }
         }
-        // Handle 2 key pressed at the same time
-        if (upKeyPressed && leftKeyPressed) {
-            lizard.moveUp();
-            lizard.moveLeft();
-        } else if (upKeyPressed && rightKeyPressed) {
-            lizard.moveUp();
-            lizard.moveRight();
-        } else if (downKeyPressed && leftKeyPressed) {
-            lizard.moveDown();
-            lizard.moveLeft();
-        } else if (downKeyPressed && rightKeyPressed) {
-            lizard.moveDown();
-            lizard.moveRight();
-        }
+        
         // Repaint the board to show the updated lizard position
         repaint();
     }
@@ -349,14 +331,6 @@ final class BoardPanel extends JPanel implements KeyListener, ComponentListener,
         int keyCode = e.getKeyCode();
         // Reset the key states when the corresponding arrow keys are released
         switch (keyCode) {
-            case KeyEvent.VK_UP ->
-                upKeyPressed = false;
-            case KeyEvent.VK_DOWN ->
-                downKeyPressed = false;
-            case KeyEvent.VK_LEFT ->
-                leftKeyPressed = false;
-            case KeyEvent.VK_RIGHT ->
-                rightKeyPressed = false;
             case KeyEvent.VK_SPACE ->
                 spaceKeyPressed = false;
             default -> {

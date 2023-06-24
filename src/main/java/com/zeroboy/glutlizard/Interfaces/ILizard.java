@@ -12,10 +12,6 @@ public interface ILizard extends IGameObject{
 
     public void movingAnimation();
 
-    public void moveLeft();
-
-    public void moveRight();
-
     public void moveUp();
 
     public void moveDown();
