@@ -66,7 +66,7 @@ final class BoardPanel extends JPanel implements KeyListener, ComponentListener,
         createNextLevelButton();
         properties = new Properties();
         // Load the lizard and fly images from the assets
-        var initLizardPosition = new Point((BOARD_WIDTH - LIZARD_IMAGE.getWidth())/2 , (BOARD_HEIGHT - LIZARD_IMAGE.getHeight())/2);
+        var initLizardPosition = new Point((BOARD_WIDTH - LIZARD_IMAGE.getWidth()) / 2, (BOARD_HEIGHT - LIZARD_IMAGE.getHeight()) / 2);
         lizard = new Lizard(initLizardPosition, LIZARD_IMAGE);
         flies = new ArrayList<>();
         scoreBoard = new ScoreBoard();
@@ -76,7 +76,6 @@ final class BoardPanel extends JPanel implements KeyListener, ComponentListener,
         random = new Random();
         // Create obstacles back
         for (BufferedImage obstacleImage : LIST_OBSTACLE_IMAGES_BACK) {
-            
             obstaclesBack.add(new Obstacle(generateRandomPosition(), obstacleImage));
         }
         // Create obstacles back
@@ -104,11 +103,11 @@ final class BoardPanel extends JPanel implements KeyListener, ComponentListener,
         spaceLimitTimer.setRepeats(false); // Only fire once
         spaceLimitTimer.start();
     }
-    
+
     public Point generateRandomPosition() {
         var x = random.nextInt(BOARD_WIDTH);
         var y = random.nextInt(BOARD_HEIGHT);
-        return new Point(x,y);
+        return new Point(x, y);
     }
 
     // Calculate and return the number of flies based on level
@@ -191,7 +190,7 @@ final class BoardPanel extends JPanel implements KeyListener, ComponentListener,
 
     private void resetBoard() {
         // Reset lizard position
-        lizard.setPosition((BOARD_WIDTH - LIZARD_IMAGE.getWidth())/2 , (BOARD_HEIGHT - LIZARD_IMAGE.getHeight())/2);
+        lizard.setPosition((BOARD_WIDTH - LIZARD_IMAGE.getWidth()) / 2, (BOARD_HEIGHT - LIZARD_IMAGE.getHeight()) / 2);
         // Reset flies
         flies.clear();
         var numberOfFlies = getNumberOfFlies();
@@ -259,7 +258,7 @@ final class BoardPanel extends JPanel implements KeyListener, ComponentListener,
         // as for(Objects object: list) not allow to modify list while iterating.
         if (spaceKeyPressed) {
             lizard.drawLizardTongue(g2d);
-            for (int i=1; i < flies.size(); i++) {
+            for (int i = 1; i < flies.size(); i++) {
                 if (flies.get(i).isPointIntersectingWithObject(lizard.getEndTonguePosition())) {
                     flies.remove(i);
                     Properties.SCORE = Properties.SCORE + 1;
@@ -306,44 +305,16 @@ final class BoardPanel extends JPanel implements KeyListener, ComponentListener,
         // Move the lizard based on the arrow keys
         switch (keyCode) {
             case KeyEvent.VK_LEFT -> {
-                leftKeyPressed = true;
-                if (currentLizardAngle >= -2.1) {
-                    lizard.rotateCounterClockwise();
-                } else if (currentLizardAngle <= -2.5) {
-                    lizard.rotateClockwise();
-                } else {
-                    lizard.moveLeft();
-                }
+                lizard.rotateCounterClockwise();
             }
             case KeyEvent.VK_RIGHT -> {
-                rightKeyPressed = true;
-                if (currentLizardAngle <= 0.6) {
-                    lizard.rotateClockwise();
-                } else if (currentLizardAngle >= 0.7) {
-                    lizard.rotateCounterClockwise();
-                } else {
-                    lizard.moveRight();
-                }
+                lizard.rotateClockwise();
             }
             case KeyEvent.VK_UP -> {
-                upKeyPressed = true;
-                if (currentLizardAngle <= -0.7) {
-                    lizard.rotateClockwise();
-                } else if (currentLizardAngle >= -0.5) {
-                    lizard.rotateCounterClockwise();
-                } else {
-                    lizard.moveUp();
-                }
+                lizard.moveUp();
             }
             case KeyEvent.VK_DOWN -> {
-                downKeyPressed = true;
-                if (currentLizardAngle <= 2.4) {
-                    lizard.rotateClockwise();
-                } else if (currentLizardAngle >= 2.5) {
-                    lizard.rotateCounterClockwise();
-                } else {
                     lizard.moveDown();
-                }
             }
             case KeyEvent.VK_SPACE -> {
                 if (allowSpaceKey) {

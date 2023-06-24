@@ -40,4 +40,7 @@ public interface Constants {
     };
     String FLY_IMAGE_FILEPATH = "src/resources/fly-50.png";
     String LIZARD_IMAGE_FILEPATH = "src/resources/lizard-100.png";
+    String LIZARD_SURPRISE_IMAGE = "src/resources/lizard-100-hitObstacle.png";
+    String LIZARD_IMAGE_STEP_1 = "src/resources/lizard-100-1.png";
+    String LIZARD_IMAGE_STEP_2 = "src/resources/lizard-100-2.png";
 }

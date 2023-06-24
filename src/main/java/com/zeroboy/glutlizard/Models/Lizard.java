@@ -2,7 +2,6 @@ package com.zeroboy.glutlizard.Models;
 
 import com.zeroboy.glutlizard.Constants;
 import com.zeroboy.glutlizard.Interfaces.ILizard;
-import com.zeroboy.glutlizard.Properties;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.GradientPaint;
@@ -50,9 +49,9 @@ public class Lizard extends GameObject implements ILizard, Constants {
         steps = steps + 1;
         try {
             if (steps % 2 == 0) {
-                setObjectImage(ImageIO.read(new File("src/resources/lizard-100-1.png")));
+                setObjectImage(ImageIO.read(new File(LIZARD_IMAGE_STEP_1)));
             } else {
-                setObjectImage(ImageIO.read(new File("src/resources/lizard-100-2.png")));
+                setObjectImage(ImageIO.read(new File(LIZARD_IMAGE_STEP_2)));
             }
         } catch (IOException ex) {
             Logger.getLogger(Lizard.class.getName()).log(Level.SEVERE, null, ex);
@@ -73,13 +72,15 @@ public class Lizard extends GameObject implements ILizard, Constants {
 
     @Override
     public void moveUp() {
-        setY(getY() - CELL_SIZE);
+        setY((int) (getY() + CELL_SIZE * Math.sin(rotationAngle - 20)));
+        setX((int) (getX() + CELL_SIZE * Math.cos(rotationAngle - 20)));
         movingAnimation();
     }
 
     @Override
     public void moveDown() {
-        setY(getY() + CELL_SIZE);
+        setY((int) (getY() - CELL_SIZE * Math.sin(rotationAngle - 20)));
+        setX((int) (getX() - CELL_SIZE * Math.cos(rotationAngle - 20)));
         movingAnimation();
     }
 
@@ -143,10 +144,10 @@ public class Lizard extends GameObject implements ILizard, Constants {
     @Override
     public void surprise() {
         try {
-            setObjectImage(ImageIO.read(new File("src/resources/lizard-100-hitObstacle.png")));
+            setObjectImage(ImageIO.read(new File(LIZARD_SURPRISE_IMAGE)));
             Timer stopTimer = new Timer(500, e -> {
                 try {
-                    setObjectImage(ImageIO.read(new File("src/resources/lizard-100.png")));
+                    setObjectImage(ImageIO.read(new File(LIZARD_IMAGE_FILEPATH)));
                 } catch (IOException ex) {
                     Logger.getLogger(Lizard.class.getName()).log(Level.SEVERE, null, ex);
                 }
