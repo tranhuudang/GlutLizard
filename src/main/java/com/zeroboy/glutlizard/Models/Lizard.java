@@ -2,6 +2,8 @@ package com.zeroboy.glutlizard.Models;
 
 import com.zeroboy.glutlizard.Constants;
 import com.zeroboy.glutlizard.Interfaces.ILizard;
+import static com.zeroboy.glutlizard.Properties.BOARD_HEIGHT;
+import static com.zeroboy.glutlizard.Properties.BOARD_WIDTH;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.GradientPaint;
@@ -44,8 +46,7 @@ public class Lizard extends GameObject implements ILizard, Constants {
         return endTonguePosition;
     }
 
-    @Override
-    public void movingAnimation() {
+    private void movingAnimation() {
         steps = steps + 1;
         try {
             if (steps % 2 == 0) {
@@ -58,19 +59,40 @@ public class Lizard extends GameObject implements ILizard, Constants {
         }
     }
 
+    private void handleMoveAction() {
+        movingAnimation();
+        lizardLoopHandler();
+    }
+
+    // Check if lizard's axis go out of bound and set it back to the opposite side.
+    private void lizardLoopHandler() {
+        if (getX() >= BOARD_WIDTH) {
+            System.out.println("out X");
+            setX(-100);
+        } else if (getX() < -100) {
+            setX(BOARD_WIDTH);
+        }
+        // Handle longtitute out of bound 
+        if (getY() >= BOARD_HEIGHT) {
+            System.out.println("out Y");
+            setY(-100);
+        } else if (getY() < -100) {
+            setY(BOARD_HEIGHT);
+        }
+    }
 
     @Override
     public void moveUp() {
         setY((int) (getY() + CELL_SIZE * Math.sin(rotationAngle - 20)));
         setX((int) (getX() + CELL_SIZE * Math.cos(rotationAngle - 20)));
-        movingAnimation();
+        handleMoveAction();
     }
 
     @Override
     public void moveDown() {
         setY((int) (getY() - CELL_SIZE * Math.sin(rotationAngle - 20)));
         setX((int) (getX() - CELL_SIZE * Math.cos(rotationAngle - 20)));
-        movingAnimation();
+        handleMoveAction();
     }
 
     @Override

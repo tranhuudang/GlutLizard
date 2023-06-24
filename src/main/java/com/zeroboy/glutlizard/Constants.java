@@ -5,7 +5,7 @@ import java.awt.Color;
 public interface Constants {
 
     int NUM_CELLS = 500;
-    int CELL_SIZE = 8;
+    int CELL_SIZE = 10;
     Color BACKGROUND_COLOR = Color.BLACK;
     String GAME_TITLE = "GlutLizard";
     String DIRECTORY_PATH = "C:\\Users\\zero\\AppData\\Local\\GlutLizard";

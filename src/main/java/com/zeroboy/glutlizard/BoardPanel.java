@@ -35,14 +35,14 @@ import javax.swing.border.Border;
 import javax.swing.border.LineBorder;
 
 final class BoardPanel extends JPanel implements KeyListener, ComponentListener, Constants {
-
+    
     private final ScoreBoard scoreBoard;
     private final ILizard lizard;
     private final List<IFly> flies;
     private final Random random;
     private final List<IObstacle> obstaclesBack;
     private final List<IObstacle> obstaclesFront;
-
+    
     private final Timer spaceLimitTimer;
     private Timer flyMovingTimer;
     private Timer countDownTimer;
@@ -50,9 +50,9 @@ final class BoardPanel extends JPanel implements KeyListener, ComponentListener,
     private JButton restartButton;
     private JButton nextLevelButton;
     private final Properties properties;
-
+    
     private boolean spaceKeyPressed = false;
-
+    
     public BoardPanel() {
         // Default layout will automaticly align button to center, so 
         // set Layout to null in order to be able to set button position to custom value.
@@ -98,7 +98,7 @@ final class BoardPanel extends JPanel implements KeyListener, ComponentListener,
         spaceLimitTimer.setRepeats(false); // Only fire once
         spaceLimitTimer.start();
     }
-
+    
     public Point generateRandomPosition() {
         var x = random.nextInt(BOARD_WIDTH);
         var y = random.nextInt(BOARD_HEIGHT);
@@ -152,7 +152,7 @@ final class BoardPanel extends JPanel implements KeyListener, ComponentListener,
         nextLevelButton.setVisible(false); // Hide the button initially
         add(nextLevelButton); // Add the button to the panel
     }
-
+    
     private void restartGame() {
         // Reset game state
         resetBoard();
@@ -165,7 +165,7 @@ final class BoardPanel extends JPanel implements KeyListener, ComponentListener,
         // Repaint the board
         repaint();
     }
-
+    
     private void nextGameLevel() {
         System.out.println("Move to the next level.");
         // Reset game state
@@ -182,7 +182,7 @@ final class BoardPanel extends JPanel implements KeyListener, ComponentListener,
         // Repaint the board
         repaint();
     }
-
+    
     private void resetBoard() {
         // Reset lizard position
         lizard.setPosition((BOARD_WIDTH - LIZARD_IMAGE.getWidth()) / 2, (BOARD_HEIGHT - LIZARD_IMAGE.getHeight()) / 2);
@@ -199,7 +199,7 @@ final class BoardPanel extends JPanel implements KeyListener, ComponentListener,
         // Repaint the board
         repaint();
     }
-
+    
     private void moveFlies() {
         // Update the positions of all flies
         for (IFly fly : flies) {
@@ -218,7 +218,7 @@ final class BoardPanel extends JPanel implements KeyListener, ComponentListener,
         // Repaint the board to show the updated fly positions
         repaint();
     }
-
+    
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
@@ -240,6 +240,7 @@ final class BoardPanel extends JPanel implements KeyListener, ComponentListener,
         }
         // Draw the lizard
         lizard.draw(g2d);
+
         // Draw obstacles front
         for (IObstacle obstacle : obstaclesFront) {
             obstacle.draw(g2d);
@@ -248,7 +249,18 @@ final class BoardPanel extends JPanel implements KeyListener, ComponentListener,
         for (IFly fly : flies) {
             fly.draw(g2d);
         }
+        //lizardLoopHandler();
         // Draw the tongue if Space key is pressed
+        lizardTongueHandler(g2d);
+        // Draw game over or victory board to screen
+        drawGameStatusBoard(g2d);
+        // Draw the top score board
+        scoreBoard.drawTopBoard(g2d);
+    }
+    
+    
+    
+    private void lizardTongueHandler(Graphics2D g2d) {
         // We use classic for loop instead of for(Objects object: list) loop to avoid ConcurrentModificationException
         // as for(Objects object: list) not allow to modify list while iterating.
         if (spaceKeyPressed) {
@@ -277,6 +289,10 @@ final class BoardPanel extends JPanel implements KeyListener, ComponentListener,
                 allowSpaceKey = false;
             }
         }
+    }
+
+    // Draw game over or victory board to screen
+    private void drawGameStatusBoard(Graphics2D g2d) {
         if ((HEART_VALUE < 0) || (TIME_LEFT <= 0)) {
             scoreBoard.gameOverBoard(g2d, (JFrame) SwingUtilities.getWindowAncestor(this));
             flyMovingTimer.stop();
@@ -289,14 +305,11 @@ final class BoardPanel extends JPanel implements KeyListener, ComponentListener,
             countDownTimer.stop();
             nextLevelButton.setVisible(true);
         }
-        // Draw the top score board
-        scoreBoard.drawTopBoard(g2d);
     }
-
+    
     @Override
     public void keyPressed(KeyEvent e) {
         int keyCode = e.getKeyCode();
-        double currentLizardAngle = lizard.getRotationAngle();
         // Move the lizard based on the arrow keys
         switch (keyCode) {
             case KeyEvent.VK_LEFT -> {
@@ -309,7 +322,7 @@ final class BoardPanel extends JPanel implements KeyListener, ComponentListener,
                 lizard.moveUp();
             }
             case KeyEvent.VK_DOWN -> {
-                    lizard.moveDown();
+                lizard.moveDown();
             }
             case KeyEvent.VK_SPACE -> {
                 if (allowSpaceKey) {
@@ -324,7 +337,7 @@ final class BoardPanel extends JPanel implements KeyListener, ComponentListener,
         // Repaint the board to show the updated lizard position
         repaint();
     }
-
+    
     @Override
     public void keyReleased(KeyEvent e) {
         // Handle key release events if needed
@@ -337,27 +350,27 @@ final class BoardPanel extends JPanel implements KeyListener, ComponentListener,
             }
         }
     }
-
+    
     @Override
     public void keyTyped(KeyEvent e) {
         // Handle key typed events if needed
     }
-
+    
     @Override
     public void componentMoved(ComponentEvent e) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
-
+    
     @Override
     public void componentShown(ComponentEvent e) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
-
+    
     @Override
     public void componentHidden(ComponentEvent e) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
-
+    
     @Override
     public void componentResized(ComponentEvent e) {
         BOARD_WIDTH = getWidth();

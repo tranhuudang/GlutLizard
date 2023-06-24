@@ -10,8 +10,6 @@ public interface ILizard extends IGameObject{
 
     public Point getEndTonguePosition();
 
-    public void movingAnimation();
-
     public void moveUp();
 
     public void moveDown();
