@@ -24,7 +24,7 @@ public class Properties implements Constants {
     public static int HEART_VALUE = 3;
     public static BufferedImage LIZARD_IMAGE;
     public static BufferedImage FLY_IMAGE;
-
+    
     public static List<BufferedImage> LIST_OBSTACLE_IMAGES_BACK;
     public static List<BufferedImage> LIST_OBSTACLE_IMAGES_FRONT;
 

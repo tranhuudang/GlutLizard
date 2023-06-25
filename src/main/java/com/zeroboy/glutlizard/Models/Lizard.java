@@ -124,12 +124,12 @@ public class Lizard extends GameObject implements ILizard, Constants {
     @Override
     public void drawLizardTongue(Graphics2D g2d) {
         // Get the current angle of the lizard
-        double angle = 70 - getRotationAngle();
+        double angle = 20.25 - getRotationAngle();
         // Calculate the center point of the lizard image
-        int centerX = getX() + 100 / 2;
-        int centerY = getY() + 100 / 2;
+        int centerX = getX() + 150 / 2;
+        int centerY = getY() + 150 / 2;
         // Calculate the offset from the center to the starting point of the tongue line
-        int offset = 70; // Distance from the center to the starting point
+        int offset = 73; // Distance from the center to the starting point
         // Calculate the starting point of the tongue line
         int startX = centerX + (int) (offset * Math.cos(angle));
         int startY = centerY - (int) (offset * Math.sin(angle));

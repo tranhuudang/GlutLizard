@@ -1,6 +1,5 @@
 package com.zeroboy.glutlizard;
 
-import com.zeroboy.glutlizard.Handlers.LocalStorage;
 import static com.zeroboy.glutlizard.Properties.BOARD_WIDTH;
 import static com.zeroboy.glutlizard.Properties.HEART_LIST;
 import static com.zeroboy.glutlizard.Properties.HEART_VALUE;
@@ -27,7 +26,7 @@ import javax.swing.JFrame;
  *
  * @author zero
  */
-public class ScoreBoard implements Constants{
+public class ScoreBoard implements Constants {
 
     private BufferedImage heartBlank;
 
@@ -48,7 +47,7 @@ public class ScoreBoard implements Constants{
         }
     }
 
-    public void gameOverBoard(Graphics2D g, JFrame frame) {
+    public void drawGameOverBoard(Graphics2D g, JFrame frame) {
         g.setColor(BACKGROUND_COLOR);
         g.fillRect(Properties.BOARD_WIDTH / 2 - 170,
                 Properties.BOARD_HEIGHT / 2 - 80, 340, 170);
@@ -64,10 +63,8 @@ public class ScoreBoard implements Constants{
                 Properties.BOARD_HEIGHT / 2);
         frame.revalidate(); // Refresh the frame to display the new button
     }
-    
-    
-    public void victoryBoard(Graphics2D g, JFrame frame) {
-        
+
+    public void drawVictoryBoard(Graphics2D g, JFrame frame) {
         g.setColor(BACKGROUND_COLOR);
         g.fillRect(Properties.BOARD_WIDTH / 2 - 170,
                 Properties.BOARD_HEIGHT / 2 - 80, 340, 170);
@@ -82,10 +79,8 @@ public class ScoreBoard implements Constants{
         g.drawString(scoreText, Properties.BOARD_WIDTH / 2 - g.getFontMetrics().stringWidth(scoreText) / 2,
                 Properties.BOARD_HEIGHT / 2);
         frame.revalidate(); // Refresh the frame to display the new button
-        
     }
 
-    
     // Draw the score
     public void drawTopBoard(Graphics2D g) {
         String timeString = int2TimeString(TIME_LEFT);
@@ -98,7 +93,7 @@ public class ScoreBoard implements Constants{
                 30);
         g.drawString(scoreText, BOARD_WIDTH - 180,
                 70);
-        g.drawString(timeLeftText, BOARD_WIDTH -180,
+        g.drawString(timeLeftText, BOARD_WIDTH - 180,
                 110);
         int heartX = 40;
         for (BufferedImage heart : Properties.HEART_LIST) {
@@ -107,7 +102,6 @@ public class ScoreBoard implements Constants{
         }
     }
 
-    
     // Convert int value to time string
     private String int2TimeString(int totalSeconds) {
         // Create a Duration object with the given number of seconds
@@ -138,10 +132,9 @@ public class ScoreBoard implements Constants{
             Logger.getLogger(Properties.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
-    
-    public void levelUp(){
-        LEVEL = LEVEL +1;
+
+    public void levelUp() {
+        LEVEL = LEVEL + 1;
     }
-    
+
 }
