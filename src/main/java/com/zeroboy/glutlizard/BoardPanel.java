@@ -261,9 +261,9 @@ final class BoardPanel extends JPanel implements KeyListener, ComponentListener,
         // as for(Objects object: list) not allow to modify list while iterating.
         if (spaceKeyPressed) {
             lizard.drawLizardTongue(g2d);
-            for (int i = 1; i < flies.size(); i++) {
-                if (flies.get(i).isPointIntersectingWithObject(lizard.getEndTonguePosition())) {
-                    flies.remove(i);
+            for (IFly fly: flies) {
+                if (fly.isPointIntersectingWithObject(lizard.getEndTonguePosition())) {
+                    flies.remove(fly);
                     Properties.SCORE = Properties.SCORE + 1;
                 }
             }

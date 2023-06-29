@@ -8,8 +8,8 @@ public interface Constants {
     int CELL_SIZE = 10;
     Color BACKGROUND_COLOR = Color.BLACK;
     String GAME_TITLE = "GlutLizard";
-    String DIRECTORY_PATH = "C:\\Users\\zero\\AppData\\Local\\GlutLizard";
-    String LEVEL_FILE_PATH = "C:\\Users\\zero\\AppData\\Local\\GlutLizard\\Level.txt";
+    String DIRECTORY_PATH = "C:\\Users\\Zr\\AppData\\Local\\GlutLizard";
+    String LEVEL_FILE_PATH = "C:\\Users\\Zr\\AppData\\Local\\GlutLizard\\Level.txt";
     // Add obstacle image paths to the list
     String[] OBSTACLE_IMAGE_BACK_PATHS = {
         "src/resources/stone-100.png",
